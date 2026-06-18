@@ -1,0 +1,4 @@
+2026-06-18T14:01:38+0530 [INFO] [app.server.connections] [17508:MainThread] Test Connection Event
+2026-06-18T14:24:33+0530 [INFO] [app.server.connections] [916:MainThread] Client connected from 127.0.0.1:53045
+2026-06-18T14:24:33+0530 [INFO] [app.server.connections] [916:MainThread] Client 127.0.0.1:53045 disconnected (EOF received)
+2026-06-18T14:24:33+0530 [INFO] [app.server.connections] [916:MainThread] Socket closed successfully for 127.0.0.1:53045

@@ -1,0 +1,12 @@
+2026-06-18T13:26:45+0530 [INFO] [app] [10868:MainThread] Logging infrastructure successfully initialized.
+2026-06-18T14:01:38+0530 [INFO] [app] [17508:MainThread] Logging infrastructure successfully initialized.
+2026-06-18T14:01:38+0530 [INFO] [app.server.connections] [17508:MainThread] Test Connection Event
+2026-06-18T14:01:38+0530 [ERROR] [app.some_module] [17508:MainThread] Test System Error
+2026-06-18T14:20:33+0530 [INFO] [app] [916:MainThread] Logging infrastructure successfully initialized.
+2026-06-18T14:20:33+0530 [INFO] [app] [916:MainThread] Asynchronous TCP Server successfully initialized and listening on 0.0.0.0:5000
+2026-06-18T14:24:33+0530 [INFO] [app.server.connections] [916:MainThread] Client connected from 127.0.0.1:53045
+2026-06-18T14:24:33+0530 [INFO] [app.server.connections] [916:MainThread] Client 127.0.0.1:53045 disconnected (EOF received)
+2026-06-18T14:24:33+0530 [INFO] [app.server.connections] [916:MainThread] Socket closed successfully for 127.0.0.1:53045
+2026-06-18T14:29:43+0530 [INFO] [app] [916:MainThread] Graceful shutdown initiated. Stopping TCP listener...
+2026-06-18T14:29:43+0530 [INFO] [app] [916:MainThread] TCP Listener stopped (no longer accepting new client sockets).
+2026-06-18T14:29:43+0530 [INFO] [app] [916:MainThread] Graceful shutdown complete. Server terminated.
