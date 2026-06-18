@@ -2,3 +2,63 @@
 2026-06-18T14:24:33+0530 [INFO] [app.server.connections] [916:MainThread] Client connected from 127.0.0.1:53045
 2026-06-18T14:24:33+0530 [INFO] [app.server.connections] [916:MainThread] Client 127.0.0.1:53045 disconnected (EOF received)
 2026-06-18T14:24:33+0530 [INFO] [app.server.connections] [916:MainThread] Socket closed successfully for 127.0.0.1:53045
+2026-06-18T14:42:19+0530 [INFO] [app.server.connections] [20424:MainThread] Client connected from 127.0.0.1:53298
+2026-06-18T14:42:19+0530 [INFO] [app.server.connections] [20424:MainThread] Client 127.0.0.1:53298 disconnected (EOF received)
+2026-06-18T14:42:19+0530 [INFO] [app.server.connections] [20424:MainThread] Socket closed successfully for 127.0.0.1:53298
+2026-06-18T15:34:33+0530 [INFO] [app.server.connections] [13744:MainThread] Client connected from 127.0.0.1:54240
+2026-06-18T15:34:33+0530 [INFO] [app.server.connections] [13744:MainThread] Client 127.0.0.1:54240 disconnected (EOF received)
+2026-06-18T15:34:33+0530 [INFO] [app.server.connections] [13744:MainThread] Socket closed successfully for 127.0.0.1:54240
+2026-06-18T15:36:30+0530 [INFO] [app.server.connections] [13744:MainThread] Client connected from 127.0.0.1:54250
+2026-06-18T15:36:35+0530 [INFO] [app.server.connections] [13744:MainThread] Client 127.0.0.1:54250 disconnected (EOF received)
+2026-06-18T15:36:35+0530 [INFO] [app.server.connections] [13744:MainThread] Socket closed successfully for 127.0.0.1:54250
+2026-06-18T15:37:08+0530 [INFO] [app.server.connections] [21676:MainThread] Client connected from 127.0.0.1:54284
+2026-06-18T15:37:12+0530 [INFO] [app.server.connections] [21676:MainThread] Client 127.0.0.1:54284 disconnected (EOF received)
+2026-06-18T15:37:12+0530 [INFO] [app.server.connections] [21676:MainThread] Socket closed successfully for 127.0.0.1:54284
+2026-06-18T16:29:59+0530 [INFO] [app.server.connections] [13836:MainThread] Client connected from 127.0.0.1:55186
+2026-06-18T16:29:59+0530 [INFO] [app.server.connections] [13836:MainThread] Client 127.0.0.1:55186 disconnected (EOF received)
+2026-06-18T16:29:59+0530 [INFO] [app.server.connections] [13836:MainThread] Socket closed successfully for 127.0.0.1:55186
+2026-06-18T16:36:51+0530 [INFO] [app.server.connections] [17772:MainThread] Client connected from 127.0.0.1:55263
+2026-06-18T16:36:51+0530 [INFO] [app.server.connections] [17772:MainThread] Client 127.0.0.1:55263 disconnected (EOF received)
+2026-06-18T16:36:51+0530 [INFO] [app.server.connections] [17772:MainThread] Socket closed successfully for 127.0.0.1:55263
+2026-06-18T16:44:06+0530 [INFO] [app.server.connections] [12124:MainThread] Client connected from 127.0.0.1:55339
+2026-06-18T16:44:06+0530 [INFO] [app.server.connections] [12124:MainThread] Client 127.0.0.1:55339 disconnected (EOF received)
+2026-06-18T16:44:06+0530 [INFO] [app.server.connections] [12124:MainThread] Socket closed successfully for 127.0.0.1:55339
+2026-06-18T16:59:48+0530 [INFO] [app.server.connections] [568:MainThread] Client connected from 127.0.0.1:55614
+2026-06-18T16:59:48+0530 [INFO] [app.server.connections] [568:MainThread] Client 127.0.0.1:55614 disconnected (EOF received)
+2026-06-18T16:59:48+0530 [INFO] [app.server.connections] [568:MainThread] Socket closed successfully for 127.0.0.1:55614
+2026-06-18T17:40:44+0530 [INFO] [app.server.connections] [15632:MainThread] Client connected from 127.0.0.1:56093
+2026-06-18T17:40:44+0530 [INFO] [app.server.connections] [15632:MainThread] Client 127.0.0.1:56093 disconnected (EOF received)
+2026-06-18T17:40:44+0530 [INFO] [app.server.connections] [15632:MainThread] Socket closed successfully for 127.0.0.1:56093
+2026-06-18T17:46:31+0530 [INFO] [app.server.connections] [6820:MainThread] Client connected from 127.0.0.1:56174
+2026-06-18T17:46:31+0530 [INFO] [app.server.connections] [6820:MainThread] Client 127.0.0.1:56174 disconnected (EOF received)
+2026-06-18T17:46:31+0530 [INFO] [app.server.connections] [6820:MainThread] Socket closed successfully for 127.0.0.1:56174
+2026-06-18T18:15:21+0530 [INFO] [app.server.connections] [9904:MainThread] [PID:9904] Client connected: 127.0.0.1:56461
+2026-06-18T18:15:21+0530 [INFO] [app.server.connections] [9904:MainThread] Received 267 bytes from 127.0.0.1:56461
+2026-06-18T18:15:21+0530 [INFO] [app.server.connections] [9904:MainThread] Sending ACK to 127.0.0.1:56461
+2026-06-18T18:15:21+0530 [INFO] [app.server.connections] [9904:MainThread] Client 127.0.0.1:56461 disconnected (EOF received)
+2026-06-18T18:15:21+0530 [INFO] [app.server.connections] [9904:MainThread] Socket released for 127.0.0.1:56461
+2026-06-18T18:25:56+0530 [INFO] [app.server.connections] [9904:MainThread] [PID:9904] Client connected: 127.0.0.1:56596
+2026-06-18T18:25:56+0530 [INFO] [app.server.connections] [9904:MainThread] Received 267 bytes from 127.0.0.1:56596
+2026-06-18T18:25:56+0530 [INFO] [app.server.connections] [9904:MainThread] Sending ACK to 127.0.0.1:56596
+2026-06-18T18:25:56+0530 [INFO] [app.server.connections] [9904:MainThread] Client 127.0.0.1:56596 disconnected (EOF received)
+2026-06-18T18:25:56+0530 [INFO] [app.server.connections] [9904:MainThread] Socket released for 127.0.0.1:56596
+2026-06-18T18:26:47+0530 [INFO] [app.server.connections] [9904:MainThread] [PID:9904] Client connected: 127.0.0.1:56607
+2026-06-18T18:26:47+0530 [INFO] [app.server.connections] [9904:MainThread] Received 267 bytes from 127.0.0.1:56607
+2026-06-18T18:26:47+0530 [INFO] [app.server.connections] [9904:MainThread] Sending ACK to 127.0.0.1:56607
+2026-06-18T18:26:47+0530 [INFO] [app.server.connections] [9904:MainThread] Client 127.0.0.1:56607 disconnected (EOF received)
+2026-06-18T18:26:47+0530 [INFO] [app.server.connections] [9904:MainThread] Socket released for 127.0.0.1:56607
+2026-06-18T18:31:42+0530 [INFO] [app.server.connections] [9904:MainThread] [PID:9904] Client connected: 127.0.0.1:56664
+2026-06-18T18:31:42+0530 [INFO] [app.server.connections] [9904:MainThread] Received 267 bytes from 127.0.0.1:56664
+2026-06-18T18:31:42+0530 [INFO] [app.server.connections] [9904:MainThread] Sending ACK to 127.0.0.1:56664
+2026-06-18T18:31:42+0530 [INFO] [app.server.connections] [9904:MainThread] Client 127.0.0.1:56664 disconnected (EOF received)
+2026-06-18T18:31:42+0530 [INFO] [app.server.connections] [9904:MainThread] Socket released for 127.0.0.1:56664
+2026-06-18T18:32:36+0530 [INFO] [app.server.connections] [9904:MainThread] [PID:9904] Client connected: 127.0.0.1:56682
+2026-06-18T18:32:36+0530 [INFO] [app.server.connections] [9904:MainThread] Received 267 bytes from 127.0.0.1:56682
+2026-06-18T18:32:36+0530 [INFO] [app.server.connections] [9904:MainThread] Sending ACK to 127.0.0.1:56682
+2026-06-18T18:32:36+0530 [INFO] [app.server.connections] [9904:MainThread] Client 127.0.0.1:56682 disconnected (EOF received)
+2026-06-18T18:32:36+0530 [INFO] [app.server.connections] [9904:MainThread] Socket released for 127.0.0.1:56682
+2026-06-18T18:32:58+0530 [INFO] [app.server.connections] [9904:MainThread] [PID:9904] Client connected: 127.0.0.1:56693
+2026-06-18T18:32:58+0530 [INFO] [app.server.connections] [9904:MainThread] Received 267 bytes from 127.0.0.1:56693
+2026-06-18T18:32:58+0530 [INFO] [app.server.connections] [9904:MainThread] Sending ACK to 127.0.0.1:56693
+2026-06-18T18:32:58+0530 [INFO] [app.server.connections] [9904:MainThread] Client 127.0.0.1:56693 disconnected (EOF received)
+2026-06-18T18:32:58+0530 [INFO] [app.server.connections] [9904:MainThread] Socket released for 127.0.0.1:56693

@@ -29,6 +29,10 @@ class Settings(BaseModel):
         default=1048576, 
         description="Maximum allowed payload size per JSON packet (in bytes)"
     )
+    SERVER_MAX_CONNECTIONS: int = Field(
+        default=1000, 
+        description="Maximum allowed concurrent client connections"
+    )
 
     # Database Configuration
     DATABASE_URL: str = Field(

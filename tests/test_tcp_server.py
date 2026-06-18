@@ -15,10 +15,12 @@ class TestTCPServer(unittest.IsolatedAsyncioTestCase):
         self.original_port = settings.SERVER_PORT
         self.original_timeout = settings.SERVER_TIMEOUT_SECONDS
         self.original_max_packet = settings.SERVER_MAX_PACKET_SIZE_BYTES
+        self.original_max_connections = settings.SERVER_MAX_CONNECTIONS
         
         # Override configuration for fast, predictable unit tests
         settings.SERVER_TIMEOUT_SECONDS = 0.5  # 500ms timeout
         settings.SERVER_MAX_PACKET_SIZE_BYTES = 100  # Strict packet size for overflow test
+        settings.SERVER_MAX_CONNECTIONS = 20  # Set limit high enough for concurrency tests
         
         # Initialize and bind server to dynamic port (port=0) to prevent port conflicts
         self.processor = DummyRequestProcessor()
@@ -44,6 +46,7 @@ class TestTCPServer(unittest.IsolatedAsyncioTestCase):
         settings.SERVER_PORT = self.original_port
         settings.SERVER_TIMEOUT_SECONDS = self.original_timeout
         settings.SERVER_MAX_PACKET_SIZE_BYTES = self.original_max_packet
+        settings.SERVER_MAX_CONNECTIONS = self.original_max_connections
 
     async def test_valid_json_packet(self) -> None:
         """Verifies that the server processes a valid JSON packet and returns a success ACK."""
@@ -144,3 +147,31 @@ class TestTCPServer(unittest.IsolatedAsyncioTestCase):
             for reader, writer in connections:
                 writer.close()
                 await writer.wait_closed()
+
+    async def test_max_connections_exceeded(self) -> None:
+        """Verifies that connections exceeding the maximum limit are rejected with a structured NACK."""
+        original_limit = settings.SERVER_MAX_CONNECTIONS
+        settings.SERVER_MAX_CONNECTIONS = 3
+        connections = []
+        try:
+            # Open the maximum allowed connections (3)
+            for _ in range(3):
+                conn = await asyncio.open_connection("127.0.0.1", self.port)
+                connections.append(conn)
+                
+            # The 4th connection should be rejected
+            reader, writer = await asyncio.open_connection("127.0.0.1", self.port)
+            try:
+                response_bytes = await reader.readline()
+                response = json.loads(response_bytes.decode("utf-8").strip())
+                self.assertEqual(response["status"], "failed")
+                self.assertIn("connection limit exceeded", response["errors"][0])
+            finally:
+                writer.close()
+                await writer.wait_closed()
+        finally:
+            # Clean up the initial 3 connections
+            for reader, writer in connections:
+                writer.close()
+                await writer.wait_closed()
+            settings.SERVER_MAX_CONNECTIONS = original_limit

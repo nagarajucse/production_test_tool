@@ -1,43 +1,71 @@
 import asyncio
+import logging
+import os
 import sys
 
 from app.config.settings import settings
 from app.utils.logging import setup_logging
-from app.server.tcp import Server, DummyRequestProcessor
+from app.server.tcp import Server
+from app.database.connection import db_manager
+from app.services.test_result_service import TestResultService
+
 
 async def main() -> None:
     """
-    Main entrypoint bootstrapper for the TCP Server.
-    Initializes logging, injects dependencies, starts the listener,
-    and handles graceful termination signals.
+    Production server bootstrap.
+
+    Startup sequence:
+    1. Logging
+    2. Database connection pool
+    3. TCP server bind
+    4. Serve until shutdown signal
+
+    Shutdown sequence (triggered by Ctrl+C / SIGTERM):
+    1. TCP listener socket closed
+    2. Active client tasks drained (5s grace)
+    3. Database pool disposed
     """
-    # 1. Initialize logging configurations
     setup_logging()
+    logger = logging.getLogger("app")
 
-    # 2. Instantiate request processor (mock implementation for Step 2)
-    processor = DummyRequestProcessor()
+    logger.info("=" * 60)
+    logger.info("Production Test Management System")
+    logger.info("PID: %d | Host: %s | Port: %d", os.getpid(), settings.SERVER_HOST, settings.SERVER_PORT)
+    logger.info("=" * 60)
 
-    # 3. Create the Server instance
+    # Initialize the database connection pool
+    db_manager.initialize()
+
+    # Provision schema — creates test_results table if it doesn't exist yet.
+    # Safe to call on every startup (IF NOT EXISTS semantics).
+    await db_manager.create_tables()
+
+    # Inject the real business service as the RequestProcessor
+    processor = TestResultService()
+
     server = Server(
         host=settings.SERVER_HOST,
         port=settings.SERVER_PORT,
-        processor=processor
+        processor=processor,
     )
 
-    # 4. Start listener socket
     await server.start()
 
-    # 5. Serve requests until interupted
     try:
         await server.serve_forever()
-    except (KeyboardInterrupt, asyncio.CancelledError):
+    except asyncio.CancelledError:
+        # Triggered when asyncio.run() cancels main() on KeyboardInterrupt (Windows)
         pass
     finally:
         await server.stop()
+        await db_manager.close()
+        logger.info("Server process PID:%d fully terminated.", os.getpid())
+
 
 if __name__ == "__main__":
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
-        print("\nTCP Server shutdown triggered by Ctrl+C.")
+        # asyncio.run() on Windows raises KeyboardInterrupt after cancelling main()
+        # The finally block in main() will have already executed cleanup
         sys.exit(0)
