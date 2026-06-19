@@ -102,6 +102,24 @@ def create_app() -> Flask:
     # --- Register Blueprints ---
     app.register_blueprint(api_bp)
 
+    # --- CORS — allow dashboard to connect from any origin (browser) ---
+    @app.after_request
+    def add_cors_headers(response: Response) -> Response:
+        response.headers["Access-Control-Allow-Origin"]  = "*"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+        return response
+
+    @app.route("/", methods=["OPTIONS"])
+    @app.route("/<path:path>", methods=["OPTIONS"])
+    def handle_options(path=""):
+        from flask import make_response
+        r = make_response("", 204)
+        r.headers["Access-Control-Allow-Origin"]  = "*"
+        r.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+        r.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+        return r
+
     # --- Global Error Handlers ---
     # These ensure ALL error responses are structured JSON,
     # regardless of where in the request lifecycle the error occurs.

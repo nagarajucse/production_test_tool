@@ -21,3 +21,75 @@ Install for production:  pip install waitress
 2026-06-19T16:08:33+0530 [INFO    ] [dms.routes] POST / stored record id=11f62832-fed2-45ba-bf0a-96bbee44ca65 sensor_sn=A400202401010111111 work_order=MO-1-2025-0211
 2026-06-19T16:10:22+0530 [INFO    ] [dms.routes] POST / received from 192.168.5.178
 2026-06-19T16:10:24+0530 [INFO    ] [dms.routes] POST / stored record id=f34acc32-e1dc-47ee-9105-6da1c3f7d910 sensor_sn=A400202401010111111 work_order=MO-1-2025-0211
+2026-06-19T16:30:08+0530 [INFO    ] [dms] Logging infrastructure initialised. log_dir=logs level=INFO
+2026-06-19T16:30:08+0530 [INFO    ] [dms.app] ============================================================
+2026-06-19T16:30:08+0530 [INFO    ] [dms.app] DMS HTTP Server — Production Test Management System
+2026-06-19T16:30:08+0530 [INFO    ] [dms.app] PID: 5744 | Host: 0.0.0.0 | Port: 5000
+2026-06-19T16:30:08+0530 [INFO    ] [dms.app] ============================================================
+2026-06-19T16:30:08+0530 [INFO    ] [dms.app] Testing PostgreSQL connection: postgresql://postgres:***@localhost:5432/test_manager
+2026-06-19T16:30:08+0530 [INFO    ] [dms.app] PostgreSQL connection verified successfully.
+2026-06-19T16:30:08+0530 [INFO    ] [dms.database] Running schema provisioning (CREATE TABLE IF NOT EXISTS)...
+2026-06-19T16:30:08+0530 [INFO    ] [dms.database] Schema provisioning complete — all tables are ready.
+2026-06-19T16:30:08+0530 [INFO    ] [dms.app] Flask application created. MAX_CONTENT_LENGTH=1048576 bytes.
+2026-06-19T16:30:08+0530 [INFO    ] [dms.app] Flask application created successfully.
+2026-06-19T16:30:08+0530 [WARNING ] [dms.app] 
+============================================================
+WARNING: Waitress is not installed.
+Falling back to Flask built-in server (development mode).
+Install for production:  pip install waitress
+============================================================
+2026-06-19T16:43:17+0530 [WARNING ] [dms.app] HTTP 405 Method Not Allowed: 405 Method Not Allowed: The method is not allowed for the requested URL.
+2026-06-19T16:43:32+0530 [WARNING ] [dms.app] HTTP 405 Method Not Allowed: 405 Method Not Allowed: The method is not allowed for the requested URL.
+2026-06-19T16:43:33+0530 [WARNING ] [dms.app] HTTP 405 Method Not Allowed: 405 Method Not Allowed: The method is not allowed for the requested URL.
+2026-06-19T16:43:54+0530 [WARNING ] [dms.app] HTTP 405 Method Not Allowed: 405 Method Not Allowed: The method is not allowed for the requested URL.
+2026-06-19T16:49:43+0530 [INFO    ] [dms] Logging infrastructure initialised. log_dir=logs level=INFO
+2026-06-19T16:49:43+0530 [INFO    ] [dms.app] ============================================================
+2026-06-19T16:49:43+0530 [INFO    ] [dms.app] DMS HTTP Server — Production Test Management System
+2026-06-19T16:49:43+0530 [INFO    ] [dms.app] PID: 7216 | Host: 0.0.0.0 | Port: 5000
+2026-06-19T16:49:43+0530 [INFO    ] [dms.app] ============================================================
+2026-06-19T16:49:43+0530 [INFO    ] [dms.app] Testing PostgreSQL connection: postgresql://postgres:***@localhost:5432/test_manager
+2026-06-19T16:49:43+0530 [INFO    ] [dms.app] PostgreSQL connection verified successfully.
+2026-06-19T16:49:43+0530 [INFO    ] [dms.database] Running schema provisioning (CREATE TABLE IF NOT EXISTS)...
+2026-06-19T16:49:43+0530 [INFO    ] [dms.database] Schema provisioning complete — all tables are ready.
+2026-06-19T16:49:43+0530 [INFO    ] [dms.app] Flask application created. MAX_CONTENT_LENGTH=1048576 bytes.
+2026-06-19T16:49:43+0530 [INFO    ] [dms.app] Flask application created successfully.
+2026-06-19T16:49:43+0530 [WARNING ] [dms.app] 
+============================================================
+WARNING: Waitress is not installed.
+Falling back to Flask built-in server (development mode).
+Install for production:  pip install waitress
+============================================================
+2026-06-19T16:51:40+0530 [INFO    ] [dms] Logging infrastructure initialised. log_dir=logs level=INFO
+2026-06-19T16:51:40+0530 [INFO    ] [dms.app] ============================================================
+2026-06-19T16:51:40+0530 [INFO    ] [dms.app] DMS HTTP Server — Production Test Management System
+2026-06-19T16:51:40+0530 [INFO    ] [dms.app] PID: 18004 | Host: 0.0.0.0 | Port: 5000
+2026-06-19T16:51:40+0530 [INFO    ] [dms.app] ============================================================
+2026-06-19T16:51:40+0530 [INFO    ] [dms.app] Testing PostgreSQL connection: postgresql://postgres:***@localhost:5432/test_manager
+2026-06-19T16:51:40+0530 [INFO    ] [dms.app] PostgreSQL connection verified successfully.
+2026-06-19T16:51:40+0530 [INFO    ] [dms.database] Running schema provisioning (CREATE TABLE IF NOT EXISTS)...
+2026-06-19T16:51:40+0530 [INFO    ] [dms.database] Schema provisioning complete — all tables are ready.
+2026-06-19T16:51:40+0530 [INFO    ] [dms.app] Flask application created. MAX_CONTENT_LENGTH=1048576 bytes.
+2026-06-19T16:51:40+0530 [INFO    ] [dms.app] Flask application created successfully.
+2026-06-19T16:51:40+0530 [WARNING ] [dms.app] 
+============================================================
+WARNING: Waitress is not installed.
+Falling back to Flask built-in server (development mode).
+Install for production:  pip install waitress
+============================================================
+2026-06-19T16:59:20+0530 [INFO    ] [dms] Logging infrastructure initialised. log_dir=logs level=INFO
+2026-06-19T16:59:20+0530 [INFO    ] [dms.app] ============================================================
+2026-06-19T16:59:20+0530 [INFO    ] [dms.app] DMS HTTP Server — Production Test Management System
+2026-06-19T16:59:20+0530 [INFO    ] [dms.app] PID: 1624 | Host: 0.0.0.0 | Port: 5000
+2026-06-19T16:59:20+0530 [INFO    ] [dms.app] ============================================================
+2026-06-19T16:59:20+0530 [INFO    ] [dms.app] Testing PostgreSQL connection: postgresql://postgres:***@localhost:5432/test_manager
+2026-06-19T16:59:20+0530 [INFO    ] [dms.app] PostgreSQL connection verified successfully.
+2026-06-19T16:59:20+0530 [INFO    ] [dms.database] Running schema provisioning (CREATE TABLE IF NOT EXISTS)...
+2026-06-19T16:59:20+0530 [INFO    ] [dms.database] Schema provisioning complete — all tables are ready.
+2026-06-19T16:59:20+0530 [INFO    ] [dms.app] Flask application created. MAX_CONTENT_LENGTH=1048576 bytes.
+2026-06-19T16:59:20+0530 [INFO    ] [dms.app] Flask application created successfully.
+2026-06-19T16:59:20+0530 [WARNING ] [dms.app] 
+============================================================
+WARNING: Waitress is not installed.
+Falling back to Flask built-in server (development mode).
+Install for production:  pip install waitress
+============================================================

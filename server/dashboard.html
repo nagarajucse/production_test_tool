@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DMS — Sensor Test Results</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #0d1117;
+            --surface: #161b22;
+            --border: #21262d;
+            --accent: #58a6ff;
+            --accent2: #3fb950;
+            --warn: #f0883e;
+            --text: #e6edf3;
+            --muted: #7d8590;
+            --row-hover: #1c2128;
+            --radius: 8px;
+            --mono: 'JetBrains Mono', monospace;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* ── Header ── */
+        header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 0 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 56px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: -0.01em;
+        }
+
+        .logo-icon {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--accent), #79c0ff);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .status-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--muted);
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 4px 12px;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--muted);
+            transition: background 0.3s;
+        }
+
+        .status-dot.online {
+            background: var(--accent2);
+            box-shadow: 0 0 6px var(--accent2);
+        }
+
+        .status-dot.offline {
+            background: #f85149;
+        }
+
+        /* ── Main layout ── */
+        main {
+            padding: 28px 32px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* ── Config bar ── */
+        .config-bar {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .config-bar label {
+            font-size: 12px;
+            color: var(--muted);
+            white-space: nowrap;
+        }
+
+        .config-bar input[type="text"] {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-family: var(--mono);
+            font-size: 12px;
+            padding: 6px 10px;
+            width: 260px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .config-bar input[type="text"]:focus {
+            border-color: var(--accent);
+        }
+
+        .btn {
+            padding: 6px 14px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            font-family: inherit;
+            transition: opacity 0.15s;
+        }
+
+        .btn:hover {
+            opacity: 0.85;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #0d1117;
+        }
+
+        .btn-ghost {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        .btn-sm {
+            padding: 4px 10px;
+            font-size: 11px;
+        }
+
+        /* ── Stat cards ── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 18px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1;
+        }
+
+        .stat-value.accent {
+            color: var(--accent);
+        }
+
+        .stat-value.green {
+            color: var(--accent2);
+        }
+
+        .stat-value.orange {
+            color: var(--warn);
+        }
+
+        .stat-sub {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        /* ── Toolbar ── */
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+
+        .search-wrap {
+            position: relative;
+            flex: 1;
+            min-width: 200px;
+            max-width: 360px;
+        }
+
+        .search-wrap input {
+            width: 100%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 13px;
+            padding: 7px 10px 7px 32px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-wrap input:focus {
+            border-color: var(--accent);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+            pointer-events: none;
+            font-size: 13px;
+        }
+
+        .per-page-select {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-size: 12px;
+            padding: 6px 8px;
+            outline: none;
+        }
+
+        .total-badge {
+            margin-left: auto;
+            font-size: 12px;
+            color: var(--muted);
+            white-space: nowrap;
+        }
+
+        .total-badge span {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        /* ── Table ── */
+        .table-wrap {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            white-space: nowrap;
+        }
+
+        thead th {
+            background: var(--bg);
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        thead th:hover {
+            color: var(--text);
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: background 0.1s;
+            cursor: pointer;
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background: var(--row-hover);
+        }
+
+        tbody td {
+            padding: 9px 14px;
+            font-size: 13px;
+            color: var(--text);
+        }
+
+        .mono {
+            font-family: var(--mono);
+            font-size: 12px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .badge-blue {
+            background: rgba(88, 166, 255, 0.15);
+            color: var(--accent);
+        }
+
+        .badge-green {
+            background: rgba(63, 185, 80, 0.15);
+            color: var(--accent2);
+        }
+
+        .score-bar-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 90px;
+        }
+
+        .score-bar {
+            height: 5px;
+            border-radius: 3px;
+            background: var(--border);
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .score-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+
+        /* ── Pagination ── */
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .page-btn {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 6px;
+            padding: 5px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: border-color 0.15s, color 0.15s;
+        }
+
+        .page-btn:hover:not(:disabled) {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        .page-btn.active {
+            background: var(--accent);
+            color: #0d1117;
+            border-color: var(--accent);
+            font-weight: 600;
+        }
+
+        .page-info {
+            font-size: 12px;
+            color: var(--muted);
+            padding: 0 6px;
+        }
+
+        /* ── Detail modal ── */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            padding: 20px;
+        }
+
+        .modal-backdrop.open {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 28px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .modal-close:hover {
+            color: var(--text);
+            background: var(--border);
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .detail-item.full {
+            grid-column: 1 / -1;
+        }
+
+        .detail-key {
+            font-size: 11px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .detail-val {
+            font-size: 13px;
+            font-family: var(--mono);
+            color: var(--text);
+            word-break: break-all;
+        }
+
+        /* ── Empty / Loading ── */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--muted);
+        }
+
+        .empty-state .icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ── Auto-refresh indicator ── */
+        .refresh-ring {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent2);
+            border-radius: 50%;
+            display: none;
+        }
+
+        .refresh-ring.active {
+            display: inline-block;
+            animation: spin 1s linear infinite;
+        }
+
+        @media (max-width: 700px) {
+            main {
+                padding: 16px;
+            }
+
+            header {
+                padding: 0 16px;
+            }
+
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <div class="logo-icon">🔬</div>
+            DMS · Sensor Test Results
+        </div>
+        <div class="status-pill">
+            <div class="status-dot" id="statusDot"></div>
+            <span id="statusText">Connecting…</span>
+            <div class="refresh-ring" id="refreshRing"></div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Server config -->
+        <div class="config-bar">
+            <label>Server URL</label>
+            <input type="text" id="serverUrl" placeholder="http://192.168.x.x:5000" />
+            <button class="btn btn-primary" onclick="applyServer()">Connect</button>
+            <button class="btn btn-ghost" onclick="toggleAutoRefresh()" id="autoBtn">Auto-refresh: OFF</button>
+            <button class="btn btn-ghost btn-sm" onclick="loadAll()">↻ Refresh now</button>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Records</div>
+                <div class="stat-value accent" id="sTotalRecords">—</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Unique Sensors</div>
+                <div class="stat-value" id="sUniqueSensors">—</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Work Orders</div>
+                <div class="stat-value" id="sWorkOrders">—</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Avg Quality (AFIQ)</div>
+                <div class="stat-value green" id="sAvgQuality">—</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Avg NFIQ Score</div>
+                <div class="stat-value orange" id="sAvgNfiq">—</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Last Received</div>
+                <div class="stat-value" id="sLastReceived" style="font-size:14px;font-weight:500">—</div>
+                <div class="stat-sub" id="sLastReceivedSub"></div>
+            </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <div class="search-wrap">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="Search sensor SN, work order, tester…"
+                    oninput="debouncedSearch()" />
+            </div>
+            <select class="per-page-select" id="perPageSelect" onchange="perPageChanged()">
+                <option value="25">25 / page</option>
+                <option value="50" selected>50 / page</option>
+                <option value="100">100 / page</option>
+                <option value="200">200 / page</option>
+            </select>
+            <div class="total-badge">Showing <span id="showingCount">—</span> of <span id="totalCount">—</span> records
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sensor SN</th>
+                        <th>Model</th>
+                        <th>MAC</th>
+                        <th>AFIQ ↕</th>
+                        <th>NFIQ</th>
+                        <th>Minutiae</th>
+                        <th>Verify Score</th>
+                        <th>Work Order</th>
+                        <th>Tester</th>
+                        <th>Client IP</th>
+                        <th>Received At</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr>
+                        <td colspan="11">
+                            <div class="empty-state">
+                                <div class="icon">📡</div>Enter your server URL above and click Connect
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="pagination" id="pagination" style="display:none"></div>
+        </div>
+    </main>
+
+    <!-- Detail modal -->
+    <div class="modal-backdrop" id="modalBackdrop" onclick="closeModal(event)">
+        <div class="modal">
+            <div class="modal-title">
+                Record Detail
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+            <div class="detail-grid" id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // ── State ──────────────────────────────────────────────────────────────────
+        let BASE_URL = localStorage.getItem('dms_url') || '';
+        let currentPage = 1;
+        let totalPages = 1;
+        let autoTimer = null;
+        let searchTimer = null;
+
+        // ── Init ───────────────────────────────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', () => {
+            if (BASE_URL) {
+                document.getElementById('serverUrl').value = BASE_URL;
+                loadAll();
+            }
+        });
+
+        // ── Server config ──────────────────────────────────────────────────────────
+        function applyServer() {
+            const raw = document.getElementById('serverUrl').value.trim().replace(/\/$/, '');
+            if (!raw) return;
+            BASE_URL = raw;
+            localStorage.setItem('dms_url', BASE_URL);
+            currentPage = 1;
+            loadAll();
+        }
+
+        // ── Load everything ────────────────────────────────────────────────────────
+        async function loadAll() {
+            if (!BASE_URL) return;
+            document.getElementById('refreshRing').classList.add('active');
+            await Promise.all([loadStats(), loadData()]);
+            document.getElementById('refreshRing').classList.remove('active');
+        }
+
+        // ── Stats ──────────────────────────────────────────────────────────────────
+        async function loadStats() {
+            try {
+                const r = await fetch(`${BASE_URL}/stats`);
+                const d = await r.json();
+                if (d.status !== 'ok') return;
+                document.getElementById('sTotalRecords').textContent = d.total_records.toLocaleString();
+                document.getElementById('sUniqueSensors').textContent = d.unique_sensors.toLocaleString();
+                document.getElementById('sWorkOrders').textContent = d.unique_work_orders.toLocaleString();
+                document.getElementById('sAvgQuality').textContent = d.avg_quality;
+                document.getElementById('sAvgNfiq').textContent = d.avg_nfiq;
+                if (d.last_received) {
+                    const dt = new Date(d.last_received);
+                    document.getElementById('sLastReceived').textContent = dt.toLocaleTimeString();
+                    document.getElementById('sLastReceivedSub').textContent = dt.toLocaleDateString();
+                }
+                setStatus('online', 'Connected');
+            } catch {
+                setStatus('offline', 'Unreachable');
+            }
+        }
+
+        // ── Data table ─────────────────────────────────────────────────────────────
+        async function loadData() {
+            if (!BASE_URL) return;
+            const search = document.getElementById('searchInput').value.trim();
+            const perPage = parseInt(document.getElementById('perPageSelect').value);
+            const params = new URLSearchParams({ page: currentPage, per_page: perPage });
+            if (search) params.set('search', search);
+
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;padding:40px">
+    <div class="spinner"></div></td></tr>`;
+
+            try {
+                const r = await fetch(`${BASE_URL}/data?${params}`);
+                const d = await r.json();
+                if (d.status !== 'ok') throw new Error(d.message);
+
+                const total = d.total;
+                totalPages = Math.max(1, Math.ceil(total / perPage));
+                document.getElementById('totalCount').textContent = total.toLocaleString();
+                document.getElementById('showingCount').textContent = d.rows.length.toLocaleString();
+
+                if (d.rows.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="11"><div class="empty-state">
+        <div class="icon">🔎</div>No records found</div></td></tr>`;
+                    document.getElementById('pagination').style.display = 'none';
+                    return;
+                }
+
+                tbody.innerHTML = d.rows.map(row => `
+      <tr onclick="showDetail(${escJson(row)})">
+        <td class="mono">${esc(row.sensor_sn)}</td>
+        <td><span class="badge badge-blue">${esc(row.model)}</span></td>
+        <td class="mono" style="color:var(--muted)">${esc(row.sensor_mac)}</td>
+        <td>${scoreBar(row.quality_score_afiq, 100)}</td>
+        <td>${scoreBar(row.nfiq_score, 100)}</td>
+        <td style="text-align:right">${row.minutiae_count}</td>
+        <td>${scoreBar(row.verification_score, 500)}</td>
+        <td class="mono">${esc(row.work_order)}</td>
+        <td><span class="badge badge-green">${esc(row.tester_id)}</span></td>
+        <td class="mono" style="color:var(--muted)">${esc(row.client_ip)}</td>
+        <td style="color:var(--muted)">${fmtDate(row.received_at)}</td>
+      </tr>`).join('');
+
+                renderPagination(total, perPage);
+                document.getElementById('pagination').style.display = totalPages > 1 ? 'flex' : 'none';
+
+            } catch (e) {
+                tbody.innerHTML = `<tr><td colspan="11"><div class="empty-state">
+      <div class="icon">⚠️</div>${esc(e.message || 'Failed to load data')}</div></td></tr>`;
+            }
+        }
+
+        // ── Helpers ────────────────────────────────────────────────────────────────
+        function esc(s) {
+            return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+        function escJson(obj) {
+            return "'" + JSON.stringify(obj).replace(/'/g, "\\'") + "'";
+        }
+        function fmtDate(iso) {
+            if (!iso) return '—';
+            const d = new Date(iso);
+            return d.toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'medium' });
+        }
+        function scoreBar(val, max) {
+            const pct = Math.min(100, Math.round((val / max) * 100));
+            return `<div class="score-bar-wrap">
+    <span style="min-width:32px;text-align:right">${val}</span>
+    <div class="score-bar"><div class="score-bar-fill" style="width:${pct}%"></div></div>
+  </div>`;
+        }
+        function setStatus(state, text) {
+            const dot = document.getElementById('statusDot');
+            dot.className = 'status-dot ' + state;
+            document.getElementById('statusText').textContent = text;
+        }
+
+        // ── Pagination ─────────────────────────────────────────────────────────────
+        function renderPagination(total, perPage) {
+            const pg = document.getElementById('pagination');
+            const pages = Math.ceil(total / perPage);
+            let html = `<button class="page-btn" onclick="gotoPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>← Prev</button>`;
+
+            const range = pageRange(currentPage, pages);
+            let prev = null;
+            for (const p of range) {
+                if (prev !== null && p - prev > 1) html += `<span class="page-info">…</span>`;
+                html += `<button class="page-btn ${p === currentPage ? 'active' : ''}" onclick="gotoPage(${p})">${p}</button>`;
+                prev = p;
+            }
+            html += `<button class="page-btn" onclick="gotoPage(${currentPage + 1})" ${currentPage === pages ? 'disabled' : ''}>Next →</button>`;
+            pg.innerHTML = html;
+        }
+        function pageRange(cur, total) {
+            const delta = 2, range = [], rangeWithDots = [];
+            for (let i = Math.max(2, cur - delta); i <= Math.min(total - 1, cur + delta); i++) range.push(i);
+            if (range[0] - 1 > 1) range.unshift('...');
+            else range.unshift(1);
+            if (total - range[range.length - 1] > 1) range.push('...');
+            range.push(total);
+            const seen = new Set();
+            for (const p of range) { if (p !== '...' && !seen.has(p)) { seen.add(p); rangeWithDots.push(p); } }
+            return rangeWithDots.filter(p => p !== '...' && p >= 1 && p <= total);
+        }
+        function gotoPage(p) {
+            if (p < 1 || p > totalPages) return;
+            currentPage = p;
+            loadData();
+        }
+        function perPageChanged() { currentPage = 1; loadData(); }
+
+        // ── Search ─────────────────────────────────────────────────────────────────
+        function debouncedSearch() {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(() => { currentPage = 1; loadData(); }, 350);
+        }
+
+        // ── Auto-refresh ───────────────────────────────────────────────────────────
+        function toggleAutoRefresh() {
+            const btn = document.getElementById('autoBtn');
+            if (autoTimer) {
+                clearInterval(autoTimer);
+                autoTimer = null;
+                btn.textContent = 'Auto-refresh: OFF';
+                btn.style.borderColor = '';
+            } else {
+                autoTimer = setInterval(loadAll, 10000);
+                btn.textContent = 'Auto-refresh: ON (10s)';
+                btn.style.color = 'var(--accent2)';
+                loadAll();
+            }
+        }
+
+        // ── Detail modal ───────────────────────────────────────────────────────────
+        function showDetail(rowJson) {
+            const row = typeof rowJson === 'string' ? JSON.parse(rowJson) : rowJson;
+            const fields = [
+                ['Record ID', row.id, true],
+                ['Sensor SN', row.sensor_sn, false],
+                ['Model', row.model, false],
+                ['MAC Address', row.sensor_mac, false],
+                ['AFIQ Score', row.quality_score_afiq, false],
+                ['NFIQ Score', row.nfiq_score, false],
+                ['Minutiae Count', row.minutiae_count, false],
+                ['Verify Score', row.verification_score, false],
+                ['Part Number', row.part_number, false],
+                ['Work Order', row.work_order, false],
+                ['Tester ID', row.tester_id, false],
+                ['Client IP', row.client_ip, false],
+                ['Test Timestamp', fmtDate(row.timestamp), false],
+                ['Received At', fmtDate(row.received_at), false],
+            ];
+            document.getElementById('modalContent').innerHTML = fields.map(([k, v, full]) =>
+                `<div class="detail-item ${full ? 'full' : ''}">
+      <div class="detail-key">${esc(k)}</div>
+      <div class="detail-val">${esc(v ?? '—')}</div>
+    </div>`
+            ).join('');
+            document.getElementById('modalBackdrop').classList.add('open');
+        }
+        function closeModal(e) {
+            if (!e || e.target === document.getElementById('modalBackdrop')) {
+                document.getElementById('modalBackdrop').classList.remove('open');
+            }
+        }
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+    </script>
+</body>
+
+</html>
