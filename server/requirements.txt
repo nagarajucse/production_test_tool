@@ -1,0 +1,24 @@
+# ==============================================================================
+# DMS HTTP Server — Dependencies
+# Pinned to exact versions for deterministic, reproducible builds.
+# To install: pip install -r requirements.txt
+# ==============================================================================
+
+# Web Framework
+Flask==3.1.1
+
+# ORM & Database Driver (synchronous — matches Flask's threading model)
+SQLAlchemy==2.0.50
+psycopg2-binary==2.9.9
+
+# Data Validation
+pydantic==2.13.4
+
+# Environment Variable Loading
+python-dotenv==1.2.2
+
+# WSGI Server — Windows Production
+waitress==3.0.1
+
+# WSGI Server — Linux Production (optional, not needed on Windows)
+# gunicorn==22.0.0

@@ -1,0 +1,182 @@
+2026-06-19T12:15:24+0530 [ERROR   ] [dms.database] Schema provisioning failed: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
+Traceback (most recent call last):
+  File "D:\production_test_tool\server\database.py", line 108, in create_tables
+    Base.metadata.create_all(bind=_engine)
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\sql\schema.py", line 5930, in create_all
+    bind._run_ddl_visitor(
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\engine\base.py", line 3269, in _run_ddl_visitor
+    with self.begin() as conn:
+  File "C:\Program Files\Python311\Lib\contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\engine\base.py", line 3259, in begin
+    with self.connect() as conn:
+         ^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\engine\base.py", line 3295, in connect
+    return self._connection_cls(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\engine\base.py", line 144, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\engine\base.py", line 3319, in raw_connection
+    return self.pool.connect()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\pool\base.py", line 448, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\pool\base.py", line 1272, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\pool\base.py", line 712, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\pool\impl.py", line 178, in _do_get
+    with util.safe_reraise():
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\util\langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\pool\impl.py", line 176, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\pool\base.py", line 389, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\pool\base.py", line 674, in __init__
+    self.__connect()
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\util\langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\engine\create.py", line 667, in connect
+    return dialect.connect(*cargs_tup, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\engine\default.py", line 630, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)  # type: ignore[no-any-return]  # NOQA: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 955, in connect
+    await_only(creator_fn(*arg, **kw)),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 123, in await_only
+    raise exc.MissingGreenlet(
+sqlalchemy.exc.MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
+2026-06-19T12:15:25+0530 [CRITICAL] [dms.app] Failed to provision database schema: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s). Server cannot start.
+Traceback (most recent call last):
+  File "D:\production_test_tool\server\app.py", line 171, in <module>
+    create_tables()
+  File "D:\production_test_tool\server\database.py", line 108, in create_tables
+    Base.metadata.create_all(bind=_engine)
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\sql\schema.py", line 5930, in create_all
+    bind._run_ddl_visitor(
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\engine\base.py", line 3269, in _run_ddl_visitor
+    with self.begin() as conn:
+  File "C:\Program Files\Python311\Lib\contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\engine\base.py", line 3259, in begin
+    with self.connect() as conn:
+         ^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\engine\base.py", line 3295, in connect
+    return self._connection_cls(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\engine\base.py", line 144, in __init__
+    self._dbapi_connection = engine.raw_connection()
+                             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\engine\base.py", line 3319, in raw_connection
+    return self.pool.connect()
+           ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\pool\base.py", line 448, in connect
+    return _ConnectionFairy._checkout(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\pool\base.py", line 1272, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\pool\base.py", line 712, in checkout
+    rec = pool._do_get()
+          ^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\pool\impl.py", line 178, in _do_get
+    with util.safe_reraise():
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\util\langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\pool\impl.py", line 176, in _do_get
+    return self._create_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\pool\base.py", line 389, in _create_connection
+    return _ConnectionRecord(self)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\pool\base.py", line 674, in __init__
+    self.__connect()
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\pool\base.py", line 900, in __connect
+    with util.safe_reraise():
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\util\langhelpers.py", line 122, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\pool\base.py", line 896, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\engine\create.py", line 667, in connect
+    return dialect.connect(*cargs_tup, **cparams)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\engine\default.py", line 630, in connect
+    return self.loaded_dbapi.connect(*cargs, **cparams)  # type: ignore[no-any-return]  # NOQA: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\dialects\postgresql\asyncpg.py", line 955, in connect
+    await_only(creator_fn(*arg, **kw)),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\util\_concurrency_py3k.py", line 123, in await_only
+    raise exc.MissingGreenlet(
+sqlalchemy.exc.MissingGreenlet: greenlet_spawn has not been called; can't call await_only() here. Was IO attempted in an unexpected place? (Background on this error at: https://sqlalche.me/e/20/xd2s)
+2026-06-19T15:09:55+0530 [CRITICAL] [dms.app] 
+============================================================
+STARTUP FAILURE — Cannot connect to PostgreSQL
+============================================================
+DATABASE_URL : postgresql://postgres:***@localhost:5432/test_manager
+Error        : (psycopg2.OperationalError) connection to server at "localhost" (::1), port 5432 failed: Connection timed out (0x0000274C/10060)
+	Is the server running on that host and accepting TCP/IP connections?
+connection to server at "localhost" (127.0.0.1), port 5432 failed: Connection timed out (0x0000274C/10060)
+	Is the server running on that host and accepting TCP/IP connections?
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+Checklist:
+  1. Is PostgreSQL running?  ->  pg_ctl status  /  services.msc
+  2. Does the database exist?  ->  CREATE DATABASE test_manager;
+  3. Are credentials correct in .env?
+  4. Is DATABASE_URL using psycopg2 format?
+     Correct  : postgresql://user:pass@host:5432/dbname
+     Incorrect: postgresql+asyncpg://...  (async -- will crash!)
+============================================================
+2026-06-19T15:12:38+0530 [CRITICAL] [dms.app] 
+============================================================
+STARTUP FAILURE — Cannot connect to PostgreSQL
+============================================================
+DATABASE_URL : postgresql://postgres:***@localhost:5432/test_manager
+Error        : (psycopg2.OperationalError) connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "test_manager" does not exist
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+Checklist:
+  1. Is PostgreSQL running?  ->  pg_ctl status  /  services.msc
+  2. Does the database exist?  ->  CREATE DATABASE test_manager;
+  3. Are credentials correct in .env?
+  4. Is DATABASE_URL using psycopg2 format?
+     Correct  : postgresql://user:pass@host:5432/dbname
+     Incorrect: postgresql+asyncpg://...  (async -- will crash!)
+============================================================
+2026-06-19T15:40:09+0530 [CRITICAL] [dms.app] 
+============================================================
+STARTUP FAILURE — Cannot connect to PostgreSQL
+============================================================
+DATABASE_URL : postgresql://postgres:***@localhost:5432/test_manager
+Error        : (psycopg2.OperationalError) connection to server at "localhost" (::1), port 5432 failed: FATAL:  database "test_manager" does not exist
+
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+Checklist:
+  1. Is PostgreSQL running?  ->  pg_ctl status  /  services.msc
+  2. Does the database exist?  ->  CREATE DATABASE test_manager;
+  3. Are credentials correct in .env?
+  4. Is DATABASE_URL using psycopg2 format?
+     Correct  : postgresql://user:pass@host:5432/dbname
+     Incorrect: postgresql+asyncpg://...  (async -- will crash!)
+============================================================

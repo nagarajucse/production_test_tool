@@ -871,3 +871,85 @@ Traceback (most recent call last):
   File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\asyncpg\connect_utils.py", line 1102, in __connect_addr
     await connected
 asyncpg.exceptions.InvalidPasswordError: password authentication failed for user "postgres"
+2026-06-18T22:20:09+0530 [ERROR] [app.server.connections] [9316:MainThread] Write error to 10.174.99.212:58479: Connection lost
+2026-06-18T22:20:09+0530 [ERROR] [app] [9316:MainThread] Unexpected error in handler for 10.174.99.212:58479: [WinError 10053] An established connection was aborted by the software in your host machine
+Traceback (most recent call last):
+  File "D:\production_test_tool\app\server\tcp.py", line 91, in handle
+    data_bytes = await asyncio.wait_for(
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\asyncio\tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\asyncio\streams.py", line 566, in readline
+    line = await self.readuntil(sep)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\asyncio\streams.py", line 603, in readuntil
+    raise self._exception
+  File "C:\Program Files\Python311\Lib\asyncio\proactor_events.py", line 401, in _loop_writing
+    self._write_fut = self._loop._proactor.send(self._sock, data)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\asyncio\windows_events.py", line 574, in send
+    ov.WSASend(conn.fileno(), buf, flags)
+ConnectionAbortedError: [WinError 10053] An established connection was aborted by the software in your host machine
+2026-06-18T22:20:10+0530 [ERROR] [app.server.connections] [9316:MainThread] Write error to 10.174.99.212:58480: Connection lost
+2026-06-18T22:20:10+0530 [ERROR] [app] [9316:MainThread] Unexpected error in handler for 10.174.99.212:58480: [WinError 10053] An established connection was aborted by the software in your host machine
+Traceback (most recent call last):
+  File "D:\production_test_tool\app\server\tcp.py", line 91, in handle
+    data_bytes = await asyncio.wait_for(
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\asyncio\tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\asyncio\streams.py", line 566, in readline
+    line = await self.readuntil(sep)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\asyncio\streams.py", line 603, in readuntil
+    raise self._exception
+  File "C:\Program Files\Python311\Lib\asyncio\proactor_events.py", line 401, in _loop_writing
+    self._write_fut = self._loop._proactor.send(self._sock, data)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\asyncio\windows_events.py", line 574, in send
+    ov.WSASend(conn.fileno(), buf, flags)
+ConnectionAbortedError: [WinError 10053] An established connection was aborted by the software in your host machine
+2026-06-18T22:20:10+0530 [ERROR] [app.server.connections] [9316:MainThread] Write error to 10.174.99.212:58481: Connection lost
+2026-06-18T22:20:10+0530 [ERROR] [app] [9316:MainThread] Unexpected error in handler for 10.174.99.212:58481: [WinError 10053] An established connection was aborted by the software in your host machine
+Traceback (most recent call last):
+  File "D:\production_test_tool\app\server\tcp.py", line 91, in handle
+    data_bytes = await asyncio.wait_for(
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\asyncio\tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\asyncio\streams.py", line 566, in readline
+    line = await self.readuntil(sep)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\asyncio\streams.py", line 603, in readuntil
+    raise self._exception
+  File "C:\Program Files\Python311\Lib\asyncio\proactor_events.py", line 401, in _loop_writing
+    self._write_fut = self._loop._proactor.send(self._sock, data)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\asyncio\windows_events.py", line 574, in send
+    ov.WSASend(conn.fileno(), buf, flags)
+ConnectionAbortedError: [WinError 10053] An established connection was aborted by the software in your host machine
+2026-06-19T14:57:24+0530 [ERROR] [app] [13828:MainThread] Failed to initialize database engine: The asyncio extension requires an async driver to be used. The loaded 'psycopg2' is not async.
+Traceback (most recent call last):
+  File "D:\production_test_tool\app\database\connection.py", line 29, in initialize
+    self._engine = create_async_engine(
+                   ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\ext\asyncio\engine.py", line 121, in create_async_engine
+    return AsyncEngine(sync_engine)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\ext\asyncio\engine.py", line 1035, in __init__
+    raise exc.InvalidRequestError(
+sqlalchemy.exc.InvalidRequestError: The asyncio extension requires an async driver to be used. The loaded 'psycopg2' is not async.
+2026-06-19T15:12:18+0530 [ERROR] [app] [11452:MainThread] Failed to initialize database engine: The asyncio extension requires an async driver to be used. The loaded 'psycopg2' is not async.
+Traceback (most recent call last):
+  File "D:\production_test_tool\app\database\connection.py", line 29, in initialize
+    self._engine = create_async_engine(
+                   ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\ext\asyncio\engine.py", line 121, in create_async_engine
+    return AsyncEngine(sync_engine)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\ext\asyncio\engine.py", line 1035, in __init__
+    raise exc.InvalidRequestError(
+sqlalchemy.exc.InvalidRequestError: The asyncio extension requires an async driver to be used. The loaded 'psycopg2' is not async.

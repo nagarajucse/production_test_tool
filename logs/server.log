@@ -1081,3 +1081,221 @@ asyncpg.exceptions.InvalidPasswordError: password authentication failed for user
 2026-06-18T19:39:05+0530 [INFO] [app] [9728:MainThread] Disposing database connection pool...
 2026-06-18T19:39:05+0530 [INFO] [app] [9728:MainThread] Database connection pool successfully disposed.
 2026-06-18T19:39:05+0530 [INFO] [app] [9728:MainThread] Server process PID:9728 fully terminated.
+2026-06-18T22:08:23+0530 [INFO] [app] [16004:MainThread] Logging infrastructure successfully initialized.
+2026-06-18T22:08:24+0530 [INFO] [app] [16004:MainThread] ============================================================
+2026-06-18T22:08:24+0530 [INFO] [app] [16004:MainThread] Production Test Management System
+2026-06-18T22:08:24+0530 [INFO] [app] [16004:MainThread] PID: 16004 | Host: http://localhost | Port: 5000
+2026-06-18T22:08:24+0530 [INFO] [app] [16004:MainThread] ============================================================
+2026-06-18T22:08:24+0530 [INFO] [app] [16004:MainThread] Initializing database connection engine...
+2026-06-18T22:08:24+0530 [INFO] [app] [16004:MainThread] Database connection engine successfully initialized.
+2026-06-18T22:08:24+0530 [INFO] [app] [16004:MainThread] Running schema provisioning (CREATE TABLE IF NOT EXISTS)...
+2026-06-18T22:08:24+0530 [INFO] [app] [16004:MainThread] Schema provisioning complete. All tables are ready.
+2026-06-18T22:08:24+0530 [INFO] [app] [16004:MainThread] [PID:16004] Binding TCP server on http://localhost:5000...
+2026-06-18T22:08:38+0530 [INFO] [app] [15020:MainThread] Logging infrastructure successfully initialized.
+2026-06-18T22:08:38+0530 [INFO] [app] [15020:MainThread] ============================================================
+2026-06-18T22:08:38+0530 [INFO] [app] [15020:MainThread] Production Test Management System
+2026-06-18T22:08:38+0530 [INFO] [app] [15020:MainThread] PID: 15020 | Host: http://localhost | Port: 5000
+2026-06-18T22:08:38+0530 [INFO] [app] [15020:MainThread] ============================================================
+2026-06-18T22:08:38+0530 [INFO] [app] [15020:MainThread] Initializing database connection engine...
+2026-06-18T22:08:38+0530 [INFO] [app] [15020:MainThread] Database connection engine successfully initialized.
+2026-06-18T22:08:38+0530 [INFO] [app] [15020:MainThread] Running schema provisioning (CREATE TABLE IF NOT EXISTS)...
+2026-06-18T22:08:38+0530 [INFO] [app] [15020:MainThread] Schema provisioning complete. All tables are ready.
+2026-06-18T22:08:38+0530 [INFO] [app] [15020:MainThread] [PID:15020] Binding TCP server on http://localhost:5000...
+2026-06-18T22:10:42+0530 [INFO] [app] [16364:MainThread] Logging infrastructure successfully initialized.
+2026-06-18T22:10:42+0530 [INFO] [app] [16364:MainThread] ============================================================
+2026-06-18T22:10:42+0530 [INFO] [app] [16364:MainThread] Production Test Management System
+2026-06-18T22:10:42+0530 [INFO] [app] [16364:MainThread] PID: 16364 | Host: http://0.0.0.0 | Port: 5000
+2026-06-18T22:10:42+0530 [INFO] [app] [16364:MainThread] ============================================================
+2026-06-18T22:10:42+0530 [INFO] [app] [16364:MainThread] Initializing database connection engine...
+2026-06-18T22:10:43+0530 [INFO] [app] [16364:MainThread] Database connection engine successfully initialized.
+2026-06-18T22:10:43+0530 [INFO] [app] [16364:MainThread] Running schema provisioning (CREATE TABLE IF NOT EXISTS)...
+2026-06-18T22:10:43+0530 [INFO] [app] [16364:MainThread] Schema provisioning complete. All tables are ready.
+2026-06-18T22:10:43+0530 [INFO] [app] [16364:MainThread] [PID:16364] Binding TCP server on http://0.0.0.0:5000...
+2026-06-18T22:12:37+0530 [INFO] [app] [14884:MainThread] Logging infrastructure successfully initialized.
+2026-06-18T22:12:37+0530 [INFO] [app] [14884:MainThread] ============================================================
+2026-06-18T22:12:37+0530 [INFO] [app] [14884:MainThread] Production Test Management System
+2026-06-18T22:12:37+0530 [INFO] [app] [14884:MainThread] PID: 14884 | Host: http://10.174.99.212 | Port: 5000
+2026-06-18T22:12:37+0530 [INFO] [app] [14884:MainThread] ============================================================
+2026-06-18T22:12:37+0530 [INFO] [app] [14884:MainThread] Initializing database connection engine...
+2026-06-18T22:12:37+0530 [INFO] [app] [14884:MainThread] Database connection engine successfully initialized.
+2026-06-18T22:12:37+0530 [INFO] [app] [14884:MainThread] Running schema provisioning (CREATE TABLE IF NOT EXISTS)...
+2026-06-18T22:12:37+0530 [INFO] [app] [14884:MainThread] Schema provisioning complete. All tables are ready.
+2026-06-18T22:12:37+0530 [INFO] [app] [14884:MainThread] [PID:14884] Binding TCP server on http://10.174.99.212:5000...
+2026-06-18T22:15:00+0530 [INFO] [app] [9316:MainThread] Logging infrastructure successfully initialized.
+2026-06-18T22:15:00+0530 [INFO] [app] [9316:MainThread] ============================================================
+2026-06-18T22:15:00+0530 [INFO] [app] [9316:MainThread] Production Test Management System
+2026-06-18T22:15:00+0530 [INFO] [app] [9316:MainThread] PID: 9316 | Host: 10.174.99.212 | Port: 5000
+2026-06-18T22:15:00+0530 [INFO] [app] [9316:MainThread] ============================================================
+2026-06-18T22:15:00+0530 [INFO] [app] [9316:MainThread] Initializing database connection engine...
+2026-06-18T22:15:00+0530 [INFO] [app] [9316:MainThread] Database connection engine successfully initialized.
+2026-06-18T22:15:00+0530 [INFO] [app] [9316:MainThread] Running schema provisioning (CREATE TABLE IF NOT EXISTS)...
+2026-06-18T22:15:01+0530 [INFO] [app] [9316:MainThread] Schema provisioning complete. All tables are ready.
+2026-06-18T22:15:01+0530 [INFO] [app] [9316:MainThread] [PID:9316] Binding TCP server on 10.174.99.212:5000...
+2026-06-18T22:15:01+0530 [INFO] [app] [9316:MainThread] [PID:9316] TCP Server socket bound and listening on 10.174.99.212:5000 (max_packet=1048576 bytes, max_connections=1000, timeout=30.0s)
+2026-06-18T22:16:36+0530 [INFO] [app.server.connections] [9316:MainThread] [PID:9316] Client connected: 10.174.99.212:58352
+2026-06-18T22:16:37+0530 [INFO] [app.server.connections] [9316:MainThread] Received 267 bytes from 10.174.99.212:58352
+2026-06-18T22:16:37+0530 [WARNING] [app] [9316:MainThread] Business rule rejection: serial 'SN000003' has already logged a PASS status.
+2026-06-18T22:16:37+0530 [INFO] [app.server.connections] [9316:MainThread] Sending ACK to 10.174.99.212:58352
+2026-06-18T22:16:37+0530 [INFO] [app.server.connections] [9316:MainThread] Client 10.174.99.212:58352 disconnected (EOF received)
+2026-06-18T22:16:37+0530 [INFO] [app.server.connections] [9316:MainThread] Socket released for 10.174.99.212:58352
+2026-06-18T22:16:57+0530 [INFO] [app.server.connections] [9316:MainThread] [PID:9316] Client connected: 10.174.99.212:58362
+2026-06-18T22:16:57+0530 [INFO] [app.server.connections] [9316:MainThread] Received 267 bytes from 10.174.99.212:58362
+2026-06-18T22:16:57+0530 [WARNING] [app] [9316:MainThread] Business rule rejection: serial 'SN000003' has already logged a PASS status.
+2026-06-18T22:16:57+0530 [INFO] [app.server.connections] [9316:MainThread] Sending ACK to 10.174.99.212:58362
+2026-06-18T22:16:57+0530 [INFO] [app.server.connections] [9316:MainThread] Client 10.174.99.212:58362 disconnected (EOF received)
+2026-06-18T22:16:57+0530 [INFO] [app.server.connections] [9316:MainThread] Socket released for 10.174.99.212:58362
+2026-06-18T22:17:16+0530 [INFO] [app.server.connections] [9316:MainThread] [PID:9316] Client connected: 10.174.99.212:58365
+2026-06-18T22:17:16+0530 [INFO] [app.server.connections] [9316:MainThread] Received 267 bytes from 10.174.99.212:58365
+2026-06-18T22:17:16+0530 [INFO] [app] [9316:MainThread] Record staged in session database transaction (ID: 08aea9a6-7484-4b53-9c86-c42c9e154ca2)
+2026-06-18T22:17:16+0530 [INFO] [app] [9316:MainThread] Record successfully saved. Device: DEV001 (SN: SN000004) ID: 08aea9a6-7484-4b53-9c86-c42c9e154ca2
+2026-06-18T22:17:16+0530 [INFO] [app.server.connections] [9316:MainThread] Sending ACK to 10.174.99.212:58365
+2026-06-18T22:17:16+0530 [INFO] [app.server.connections] [9316:MainThread] Client 10.174.99.212:58365 disconnected (EOF received)
+2026-06-18T22:17:16+0530 [INFO] [app.server.connections] [9316:MainThread] Socket released for 10.174.99.212:58365
+2026-06-18T22:20:09+0530 [INFO] [app.server.connections] [9316:MainThread] [PID:9316] Client connected: 10.174.99.212:58479
+2026-06-18T22:20:09+0530 [INFO] [app.server.connections] [9316:MainThread] Received 17 bytes from 10.174.99.212:58479
+2026-06-18T22:20:09+0530 [INFO] [app.server.connections] [9316:MainThread] Sending ACK to 10.174.99.212:58479
+2026-06-18T22:20:09+0530 [INFO] [app.server.connections] [9316:MainThread] Received 26 bytes from 10.174.99.212:58479
+2026-06-18T22:20:09+0530 [INFO] [app.server.connections] [9316:MainThread] Sending ACK to 10.174.99.212:58479
+2026-06-18T22:20:09+0530 [INFO] [app.server.connections] [9316:MainThread] Received 36 bytes from 10.174.99.212:58479
+2026-06-18T22:20:09+0530 [INFO] [app.server.connections] [9316:MainThread] Sending ACK to 10.174.99.212:58479
+2026-06-18T22:20:09+0530 [ERROR] [app.server.connections] [9316:MainThread] Write error to 10.174.99.212:58479: Connection lost
+2026-06-18T22:20:09+0530 [ERROR] [app] [9316:MainThread] Unexpected error in handler for 10.174.99.212:58479: [WinError 10053] An established connection was aborted by the software in your host machine
+Traceback (most recent call last):
+  File "D:\production_test_tool\app\server\tcp.py", line 91, in handle
+    data_bytes = await asyncio.wait_for(
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\asyncio\tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\asyncio\streams.py", line 566, in readline
+    line = await self.readuntil(sep)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\asyncio\streams.py", line 603, in readuntil
+    raise self._exception
+  File "C:\Program Files\Python311\Lib\asyncio\proactor_events.py", line 401, in _loop_writing
+    self._write_fut = self._loop._proactor.send(self._sock, data)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\asyncio\windows_events.py", line 574, in send
+    ov.WSASend(conn.fileno(), buf, flags)
+ConnectionAbortedError: [WinError 10053] An established connection was aborted by the software in your host machine
+2026-06-18T22:20:10+0530 [INFO] [app.server.connections] [9316:MainThread] [PID:9316] Client connected: 10.174.99.212:58480
+2026-06-18T22:20:10+0530 [INFO] [app.server.connections] [9316:MainThread] Received 17 bytes from 10.174.99.212:58480
+2026-06-18T22:20:10+0530 [INFO] [app.server.connections] [9316:MainThread] Sending ACK to 10.174.99.212:58480
+2026-06-18T22:20:10+0530 [INFO] [app.server.connections] [9316:MainThread] Received 26 bytes from 10.174.99.212:58480
+2026-06-18T22:20:10+0530 [INFO] [app.server.connections] [9316:MainThread] Sending ACK to 10.174.99.212:58480
+2026-06-18T22:20:10+0530 [INFO] [app.server.connections] [9316:MainThread] Received 36 bytes from 10.174.99.212:58480
+2026-06-18T22:20:10+0530 [INFO] [app.server.connections] [9316:MainThread] Sending ACK to 10.174.99.212:58480
+2026-06-18T22:20:10+0530 [ERROR] [app.server.connections] [9316:MainThread] Write error to 10.174.99.212:58480: Connection lost
+2026-06-18T22:20:10+0530 [ERROR] [app] [9316:MainThread] Unexpected error in handler for 10.174.99.212:58480: [WinError 10053] An established connection was aborted by the software in your host machine
+Traceback (most recent call last):
+  File "D:\production_test_tool\app\server\tcp.py", line 91, in handle
+    data_bytes = await asyncio.wait_for(
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\asyncio\tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\asyncio\streams.py", line 566, in readline
+    line = await self.readuntil(sep)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\asyncio\streams.py", line 603, in readuntil
+    raise self._exception
+  File "C:\Program Files\Python311\Lib\asyncio\proactor_events.py", line 401, in _loop_writing
+    self._write_fut = self._loop._proactor.send(self._sock, data)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\asyncio\windows_events.py", line 574, in send
+    ov.WSASend(conn.fileno(), buf, flags)
+ConnectionAbortedError: [WinError 10053] An established connection was aborted by the software in your host machine
+2026-06-18T22:20:10+0530 [INFO] [app.server.connections] [9316:MainThread] [PID:9316] Client connected: 10.174.99.212:58481
+2026-06-18T22:20:10+0530 [INFO] [app.server.connections] [9316:MainThread] Received 17 bytes from 10.174.99.212:58481
+2026-06-18T22:20:10+0530 [INFO] [app.server.connections] [9316:MainThread] Sending ACK to 10.174.99.212:58481
+2026-06-18T22:20:10+0530 [INFO] [app.server.connections] [9316:MainThread] Received 26 bytes from 10.174.99.212:58481
+2026-06-18T22:20:10+0530 [INFO] [app.server.connections] [9316:MainThread] Sending ACK to 10.174.99.212:58481
+2026-06-18T22:20:10+0530 [INFO] [app.server.connections] [9316:MainThread] Received 36 bytes from 10.174.99.212:58481
+2026-06-18T22:20:10+0530 [INFO] [app.server.connections] [9316:MainThread] Sending ACK to 10.174.99.212:58481
+2026-06-18T22:20:10+0530 [ERROR] [app.server.connections] [9316:MainThread] Write error to 10.174.99.212:58481: Connection lost
+2026-06-18T22:20:10+0530 [ERROR] [app] [9316:MainThread] Unexpected error in handler for 10.174.99.212:58481: [WinError 10053] An established connection was aborted by the software in your host machine
+Traceback (most recent call last):
+  File "D:\production_test_tool\app\server\tcp.py", line 91, in handle
+    data_bytes = await asyncio.wait_for(
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\asyncio\tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\asyncio\streams.py", line 566, in readline
+    line = await self.readuntil(sep)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\asyncio\streams.py", line 603, in readuntil
+    raise self._exception
+  File "C:\Program Files\Python311\Lib\asyncio\proactor_events.py", line 401, in _loop_writing
+    self._write_fut = self._loop._proactor.send(self._sock, data)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python311\Lib\asyncio\windows_events.py", line 574, in send
+    ov.WSASend(conn.fileno(), buf, flags)
+ConnectionAbortedError: [WinError 10053] An established connection was aborted by the software in your host machine
+2026-06-18T22:38:49+0530 [INFO] [app] [9316:MainThread] [PID:9316] Graceful shutdown initiated. Active connections: 0
+2026-06-18T22:38:49+0530 [INFO] [app] [9316:MainThread] TCP listener socket closed — no longer accepting connections.
+2026-06-18T22:38:49+0530 [INFO] [app] [9316:MainThread] [PID:9316] Shutdown complete. Remaining asyncio tasks in loop: 2
+2026-06-18T22:38:49+0530 [INFO] [app] [9316:MainThread] Disposing database connection pool...
+2026-06-18T22:38:49+0530 [INFO] [app] [9316:MainThread] Database connection pool successfully disposed.
+2026-06-18T22:38:49+0530 [INFO] [app] [9316:MainThread] Server process PID:9316 fully terminated.
+2026-06-18T22:39:23+0530 [INFO] [app] [3480:MainThread] Logging infrastructure successfully initialized.
+2026-06-18T22:39:23+0530 [INFO] [app] [3480:MainThread] ============================================================
+2026-06-18T22:39:23+0530 [INFO] [app] [3480:MainThread] Production Test Management System
+2026-06-18T22:39:23+0530 [INFO] [app] [3480:MainThread] PID: 3480 | Host: 10.174.99.212 | Port: 5000
+2026-06-18T22:39:23+0530 [INFO] [app] [3480:MainThread] ============================================================
+2026-06-18T22:39:23+0530 [INFO] [app] [3480:MainThread] Initializing database connection engine...
+2026-06-18T22:39:24+0530 [INFO] [app] [3480:MainThread] Database connection engine successfully initialized.
+2026-06-18T22:39:24+0530 [INFO] [app] [3480:MainThread] Running schema provisioning (CREATE TABLE IF NOT EXISTS)...
+2026-06-18T22:39:24+0530 [INFO] [app] [3480:MainThread] Schema provisioning complete. All tables are ready.
+2026-06-18T22:39:24+0530 [INFO] [app] [3480:MainThread] [PID:3480] Binding TCP server on 10.174.99.212:5000...
+2026-06-18T22:39:24+0530 [INFO] [app] [3480:MainThread] [PID:3480] TCP Server socket bound and listening on 10.174.99.212:5000 (max_packet=1048576 bytes, max_connections=1000, timeout=30.0s)
+2026-06-18T22:41:30+0530 [INFO] [app.server.connections] [3480:MainThread] [PID:3480] Client connected: 10.174.99.212:57284
+2026-06-18T22:41:35+0530 [INFO] [app.server.connections] [3480:MainThread] Received 12 bytes from 10.174.99.212:57284
+2026-06-18T22:41:35+0530 [INFO] [app.server.connections] [3480:MainThread] Sending ACK to 10.174.99.212:57284
+2026-06-18T22:41:35+0530 [INFO] [app.server.connections] [3480:MainThread] Client 10.174.99.212:57284 disconnected (EOF received)
+2026-06-18T22:41:35+0530 [INFO] [app.server.connections] [3480:MainThread] Socket released for 10.174.99.212:57284
+2026-06-18T23:10:17+0530 [INFO] [app.server.connections] [3480:MainThread] [PID:3480] Client connected: 10.174.99.212:57674
+2026-06-18T23:10:22+0530 [INFO] [app.server.connections] [3480:MainThread] Received 36 bytes from 10.174.99.212:57674
+2026-06-18T23:10:22+0530 [INFO] [app.server.connections] [3480:MainThread] Sending ACK to 10.174.99.212:57674
+2026-06-18T23:10:22+0530 [INFO] [app.server.connections] [3480:MainThread] Client 10.174.99.212:57674 disconnected (EOF received)
+2026-06-18T23:10:22+0530 [INFO] [app.server.connections] [3480:MainThread] Socket released for 10.174.99.212:57674
+2026-06-18T23:19:56+0530 [INFO] [app] [3480:MainThread] [PID:3480] Graceful shutdown initiated. Active connections: 0
+2026-06-18T23:19:56+0530 [INFO] [app] [3480:MainThread] TCP listener socket closed — no longer accepting connections.
+2026-06-18T23:19:56+0530 [INFO] [app] [3480:MainThread] [PID:3480] Shutdown complete. Remaining asyncio tasks in loop: 2
+2026-06-18T23:19:56+0530 [INFO] [app] [3480:MainThread] Disposing database connection pool...
+2026-06-18T23:19:56+0530 [INFO] [app] [3480:MainThread] Database connection pool successfully disposed.
+2026-06-18T23:19:56+0530 [INFO] [app] [3480:MainThread] Server process PID:3480 fully terminated.
+2026-06-19T14:57:24+0530 [INFO] [app] [13828:MainThread] Logging infrastructure successfully initialized.
+2026-06-19T14:57:24+0530 [INFO] [app] [13828:MainThread] ============================================================
+2026-06-19T14:57:24+0530 [INFO] [app] [13828:MainThread] Production Test Management System
+2026-06-19T14:57:24+0530 [INFO] [app] [13828:MainThread] PID: 13828 | Host: 0.0.0.0 | Port: 5000
+2026-06-19T14:57:24+0530 [INFO] [app] [13828:MainThread] ============================================================
+2026-06-19T14:57:24+0530 [INFO] [app] [13828:MainThread] Initializing database connection engine...
+2026-06-19T14:57:24+0530 [ERROR] [app] [13828:MainThread] Failed to initialize database engine: The asyncio extension requires an async driver to be used. The loaded 'psycopg2' is not async.
+Traceback (most recent call last):
+  File "D:\production_test_tool\app\database\connection.py", line 29, in initialize
+    self._engine = create_async_engine(
+                   ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\ext\asyncio\engine.py", line 121, in create_async_engine
+    return AsyncEngine(sync_engine)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\ext\asyncio\engine.py", line 1035, in __init__
+    raise exc.InvalidRequestError(
+sqlalchemy.exc.InvalidRequestError: The asyncio extension requires an async driver to be used. The loaded 'psycopg2' is not async.
+2026-06-19T15:12:18+0530 [INFO] [app] [11452:MainThread] Logging infrastructure successfully initialized.
+2026-06-19T15:12:18+0530 [INFO] [app] [11452:MainThread] ============================================================
+2026-06-19T15:12:18+0530 [INFO] [app] [11452:MainThread] Production Test Management System
+2026-06-19T15:12:18+0530 [INFO] [app] [11452:MainThread] PID: 11452 | Host: 0.0.0.0 | Port: 5000
+2026-06-19T15:12:18+0530 [INFO] [app] [11452:MainThread] ============================================================
+2026-06-19T15:12:18+0530 [INFO] [app] [11452:MainThread] Initializing database connection engine...
+2026-06-19T15:12:18+0530 [ERROR] [app] [11452:MainThread] Failed to initialize database engine: The asyncio extension requires an async driver to be used. The loaded 'psycopg2' is not async.
+Traceback (most recent call last):
+  File "D:\production_test_tool\app\database\connection.py", line 29, in initialize
+    self._engine = create_async_engine(
+                   ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\ext\asyncio\engine.py", line 121, in create_async_engine
+    return AsyncEngine(sync_engine)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aratek\AppData\Roaming\Python\Python311\site-packages\sqlalchemy\ext\asyncio\engine.py", line 1035, in __init__
+    raise exc.InvalidRequestError(
+sqlalchemy.exc.InvalidRequestError: The asyncio extension requires an async driver to be used. The loaded 'psycopg2' is not async.

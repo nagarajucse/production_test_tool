@@ -62,3 +62,52 @@
 2026-06-18T18:32:58+0530 [INFO] [app.server.connections] [9904:MainThread] Sending ACK to 127.0.0.1:56693
 2026-06-18T18:32:58+0530 [INFO] [app.server.connections] [9904:MainThread] Client 127.0.0.1:56693 disconnected (EOF received)
 2026-06-18T18:32:58+0530 [INFO] [app.server.connections] [9904:MainThread] Socket released for 127.0.0.1:56693
+2026-06-18T22:16:36+0530 [INFO] [app.server.connections] [9316:MainThread] [PID:9316] Client connected: 10.174.99.212:58352
+2026-06-18T22:16:37+0530 [INFO] [app.server.connections] [9316:MainThread] Received 267 bytes from 10.174.99.212:58352
+2026-06-18T22:16:37+0530 [INFO] [app.server.connections] [9316:MainThread] Sending ACK to 10.174.99.212:58352
+2026-06-18T22:16:37+0530 [INFO] [app.server.connections] [9316:MainThread] Client 10.174.99.212:58352 disconnected (EOF received)
+2026-06-18T22:16:37+0530 [INFO] [app.server.connections] [9316:MainThread] Socket released for 10.174.99.212:58352
+2026-06-18T22:16:57+0530 [INFO] [app.server.connections] [9316:MainThread] [PID:9316] Client connected: 10.174.99.212:58362
+2026-06-18T22:16:57+0530 [INFO] [app.server.connections] [9316:MainThread] Received 267 bytes from 10.174.99.212:58362
+2026-06-18T22:16:57+0530 [INFO] [app.server.connections] [9316:MainThread] Sending ACK to 10.174.99.212:58362
+2026-06-18T22:16:57+0530 [INFO] [app.server.connections] [9316:MainThread] Client 10.174.99.212:58362 disconnected (EOF received)
+2026-06-18T22:16:57+0530 [INFO] [app.server.connections] [9316:MainThread] Socket released for 10.174.99.212:58362
+2026-06-18T22:17:16+0530 [INFO] [app.server.connections] [9316:MainThread] [PID:9316] Client connected: 10.174.99.212:58365
+2026-06-18T22:17:16+0530 [INFO] [app.server.connections] [9316:MainThread] Received 267 bytes from 10.174.99.212:58365
+2026-06-18T22:17:16+0530 [INFO] [app.server.connections] [9316:MainThread] Sending ACK to 10.174.99.212:58365
+2026-06-18T22:17:16+0530 [INFO] [app.server.connections] [9316:MainThread] Client 10.174.99.212:58365 disconnected (EOF received)
+2026-06-18T22:17:16+0530 [INFO] [app.server.connections] [9316:MainThread] Socket released for 10.174.99.212:58365
+2026-06-18T22:20:09+0530 [INFO] [app.server.connections] [9316:MainThread] [PID:9316] Client connected: 10.174.99.212:58479
+2026-06-18T22:20:09+0530 [INFO] [app.server.connections] [9316:MainThread] Received 17 bytes from 10.174.99.212:58479
+2026-06-18T22:20:09+0530 [INFO] [app.server.connections] [9316:MainThread] Sending ACK to 10.174.99.212:58479
+2026-06-18T22:20:09+0530 [INFO] [app.server.connections] [9316:MainThread] Received 26 bytes from 10.174.99.212:58479
+2026-06-18T22:20:09+0530 [INFO] [app.server.connections] [9316:MainThread] Sending ACK to 10.174.99.212:58479
+2026-06-18T22:20:09+0530 [INFO] [app.server.connections] [9316:MainThread] Received 36 bytes from 10.174.99.212:58479
+2026-06-18T22:20:09+0530 [INFO] [app.server.connections] [9316:MainThread] Sending ACK to 10.174.99.212:58479
+2026-06-18T22:20:09+0530 [ERROR] [app.server.connections] [9316:MainThread] Write error to 10.174.99.212:58479: Connection lost
+2026-06-18T22:20:10+0530 [INFO] [app.server.connections] [9316:MainThread] [PID:9316] Client connected: 10.174.99.212:58480
+2026-06-18T22:20:10+0530 [INFO] [app.server.connections] [9316:MainThread] Received 17 bytes from 10.174.99.212:58480
+2026-06-18T22:20:10+0530 [INFO] [app.server.connections] [9316:MainThread] Sending ACK to 10.174.99.212:58480
+2026-06-18T22:20:10+0530 [INFO] [app.server.connections] [9316:MainThread] Received 26 bytes from 10.174.99.212:58480
+2026-06-18T22:20:10+0530 [INFO] [app.server.connections] [9316:MainThread] Sending ACK to 10.174.99.212:58480
+2026-06-18T22:20:10+0530 [INFO] [app.server.connections] [9316:MainThread] Received 36 bytes from 10.174.99.212:58480
+2026-06-18T22:20:10+0530 [INFO] [app.server.connections] [9316:MainThread] Sending ACK to 10.174.99.212:58480
+2026-06-18T22:20:10+0530 [ERROR] [app.server.connections] [9316:MainThread] Write error to 10.174.99.212:58480: Connection lost
+2026-06-18T22:20:10+0530 [INFO] [app.server.connections] [9316:MainThread] [PID:9316] Client connected: 10.174.99.212:58481
+2026-06-18T22:20:10+0530 [INFO] [app.server.connections] [9316:MainThread] Received 17 bytes from 10.174.99.212:58481
+2026-06-18T22:20:10+0530 [INFO] [app.server.connections] [9316:MainThread] Sending ACK to 10.174.99.212:58481
+2026-06-18T22:20:10+0530 [INFO] [app.server.connections] [9316:MainThread] Received 26 bytes from 10.174.99.212:58481
+2026-06-18T22:20:10+0530 [INFO] [app.server.connections] [9316:MainThread] Sending ACK to 10.174.99.212:58481
+2026-06-18T22:20:10+0530 [INFO] [app.server.connections] [9316:MainThread] Received 36 bytes from 10.174.99.212:58481
+2026-06-18T22:20:10+0530 [INFO] [app.server.connections] [9316:MainThread] Sending ACK to 10.174.99.212:58481
+2026-06-18T22:20:10+0530 [ERROR] [app.server.connections] [9316:MainThread] Write error to 10.174.99.212:58481: Connection lost
+2026-06-18T22:41:30+0530 [INFO] [app.server.connections] [3480:MainThread] [PID:3480] Client connected: 10.174.99.212:57284
+2026-06-18T22:41:35+0530 [INFO] [app.server.connections] [3480:MainThread] Received 12 bytes from 10.174.99.212:57284
+2026-06-18T22:41:35+0530 [INFO] [app.server.connections] [3480:MainThread] Sending ACK to 10.174.99.212:57284
+2026-06-18T22:41:35+0530 [INFO] [app.server.connections] [3480:MainThread] Client 10.174.99.212:57284 disconnected (EOF received)
+2026-06-18T22:41:35+0530 [INFO] [app.server.connections] [3480:MainThread] Socket released for 10.174.99.212:57284
+2026-06-18T23:10:17+0530 [INFO] [app.server.connections] [3480:MainThread] [PID:3480] Client connected: 10.174.99.212:57674
+2026-06-18T23:10:22+0530 [INFO] [app.server.connections] [3480:MainThread] Received 36 bytes from 10.174.99.212:57674
+2026-06-18T23:10:22+0530 [INFO] [app.server.connections] [3480:MainThread] Sending ACK to 10.174.99.212:57674
+2026-06-18T23:10:22+0530 [INFO] [app.server.connections] [3480:MainThread] Client 10.174.99.212:57674 disconnected (EOF received)
+2026-06-18T23:10:22+0530 [INFO] [app.server.connections] [3480:MainThread] Socket released for 10.174.99.212:57674
