@@ -39,7 +39,7 @@ try:
     from sqlalchemy import text
 except ImportError as _e:
     print(f"FATAL: Missing dependency — {_e}", flush=True)
-    print("Run:  pip install flask sqlalchemy psycopg2-binary", flush=True)
+    print("Run:  pip install flask sqlalchemy pymysql", flush=True)
     sys.exit(1)
 
 try:
@@ -98,6 +98,7 @@ def create_app() -> Flask:
     app.config["PROPAGATE_EXCEPTIONS"] = False
     app.config["MAX_CONTENT_LENGTH"] = settings.MAX_CONTENT_LENGTH  # reject oversized bodies → HTTP 413
     app.config["JSON_SORT_KEYS"] = False
+    app.config["SECRET_KEY"] = settings.SECRET_KEY
 
     # --- Register Blueprints ---
     app.register_blueprint(api_bp)
@@ -113,6 +114,7 @@ def create_app() -> Flask:
     @app.route("/", methods=["OPTIONS"])
     @app.route("/<path:path>", methods=["OPTIONS"])
     def handle_options(path=""):
+        # pyrefly: ignore [missing-import]
         from flask import make_response
         r = make_response("", 204)
         r.headers["Access-Control-Allow-Origin"]  = "*"
@@ -201,8 +203,11 @@ def _start_wsgi_server(app: Flask) -> None:
             settings.SERVER_HOST,
             settings.SERVER_PORT,
         )
+        host = settings.SERVER_HOST
+        display_host = "localhost" if host == "0.0.0.0" else host
         print(
-            f"[DMS] Waitress server running on http://{settings.SERVER_HOST}:{settings.SERVER_PORT}",
+            f"[DMS] Waitress server running on http://{host}:{settings.SERVER_PORT}\n"
+            f"[DMS] Login page available at http://{display_host}:{settings.SERVER_PORT}/login",
             flush=True,
         )
         waitress_serve(
@@ -224,8 +229,11 @@ def _start_wsgi_server(app: Flask) -> None:
             "Install for production:  pip install waitress\n%s",
             _sep, _sep,
         )
+        host = settings.SERVER_HOST
+        display_host = "localhost" if host == "0.0.0.0" else host
         print(
-            f"[DMS] Flask dev server running on http://{settings.SERVER_HOST}:{settings.SERVER_PORT}",
+            f"[DMS] Flask dev server running on http://{host}:{settings.SERVER_PORT}\n"
+            f"[DMS] Login page available at http://{display_host}:{settings.SERVER_PORT}/login",
             flush=True,
         )
         app.run(
@@ -239,7 +247,7 @@ def _start_wsgi_server(app: Flask) -> None:
 
 def _verify_database_connection() -> None:
     """
-    Verifies that PostgreSQL is reachable BEFORE attempting schema provisioning.
+    Verifies that database is reachable BEFORE attempting schema provisioning.
 
     Raises:
         SystemExit(1) with a descriptive message if the connection fails.
@@ -247,27 +255,27 @@ def _verify_database_connection() -> None:
     from database import get_engine
     engine = get_engine()
     masked_url = str(engine.url).replace(str(engine.url.password or ""), "***")
-    _app_logger.info("Testing PostgreSQL connection: %s", masked_url)
+    _app_logger.info("Testing database connection: %s", masked_url)
     try:
         with engine.connect() as conn:
             conn.execute(text("SELECT 1"))
-        _app_logger.info("PostgreSQL connection verified successfully.")
-        print("[DMS] PostgreSQL connection OK.", flush=True)
+        _app_logger.info("Database connection verified successfully.")
+        print("[DMS] Database connection OK.", flush=True)
     except Exception as exc:
         _sep = "=" * 60
         msg = (
             f"\n{_sep}\n"
-            f"STARTUP FAILURE — Cannot connect to PostgreSQL\n"
+            f"STARTUP FAILURE — Cannot connect to Database\n"
             f"{_sep}\n"
             f"DATABASE_URL : {masked_url}\n"
             f"Error        : {exc}\n\n"
             f"Checklist:\n"
-            f"  1. Is PostgreSQL running?  ->  pg_ctl status  /  services.msc\n"
+            f"  1. Is MySQL/PostgreSQL running?  ->  services.msc / docker ps\n"
             f"  2. Does the database exist?  ->  CREATE DATABASE test_manager;\n"
             f"  3. Are credentials correct in .env?\n"
-            f"  4. Is DATABASE_URL using psycopg2 format?\n"
-            f"     Correct  : postgresql://user:pass@host:5432/dbname\n"
-            f"     Incorrect: postgresql+asyncpg://...  (async -- not supported)\n"
+            f"  4. Is DATABASE_URL using standard/pymysql format?\n"
+            f"     Correct  : mysql+pymysql://user:pass@host:3306/dbname\n"
+            f"     Incorrect: mysql+aiomysql://...  (async -- not supported in sync app)\n"
             f"{_sep}"
         )
         _app_logger.critical(msg)

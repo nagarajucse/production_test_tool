@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DMS — Sensor Test Results</title>
+    <link rel="icon" type="image/png" href="/static/favicon.png">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
@@ -579,14 +580,18 @@
 <body>
 
     <header>
-        <div class="logo">
-            <div class="logo-icon">🔬</div>
-            DMS · Sensor Test Results
+        <div class="logo" style="display: flex; align-items: center; gap: 8px;">
+            <img src="/static/logo_icon.png" alt="Aratek Logo Icon" style="height: 28px; object-fit: contain;">
+            <span style="color: var(--muted); margin: 0 6px;">|</span>
+            <span>DMS · Sensor Test Results</span>
         </div>
-        <div class="status-pill">
-            <div class="status-dot" id="statusDot"></div>
-            <span id="statusText">Connecting…</span>
-            <div class="refresh-ring" id="refreshRing"></div>
+        <div style="display: flex; align-items: center; gap: 14px;">
+            <div class="status-pill">
+                <div class="status-dot" id="statusDot"></div>
+                <span id="statusText">Connecting…</span>
+                <div class="refresh-ring" id="refreshRing"></div>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="handleLogout()" style="background: rgba(248, 81, 73, 0.15); color: #f85149; border: 1px solid rgba(248, 81, 73, 0.2);">Logout</button>
         </div>
     </header>
 
@@ -727,6 +732,10 @@
         async function loadStats() {
             try {
                 const r = await fetch(`${BASE_URL}/stats`);
+                if (r.status === 401) {
+                    window.location.href = '/login';
+                    return;
+                }
                 const d = await r.json();
                 if (d.status !== 'ok') return;
                 document.getElementById('sTotalRecords').textContent = d.total_records.toLocaleString();
@@ -759,6 +768,10 @@
 
             try {
                 const r = await fetch(`${BASE_URL}/data?${params}`);
+                if (r.status === 401) {
+                    window.location.href = '/login';
+                    return;
+                }
                 const d = await r.json();
                 if (d.status !== 'ok') throw new Error(d.message);
 
@@ -912,6 +925,19 @@
             }
         }
         document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+        async function handleLogout() {
+            try {
+                const response = await fetch(`${BASE_URL}/logout`, {
+                    method: 'POST'
+                });
+                if (response.ok) {
+                    window.location.href = '/login';
+                }
+            } catch (err) {
+                console.error("Logout failed", err);
+            }
+        }
     </script>
 </body>
 
