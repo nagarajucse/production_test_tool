@@ -46,6 +46,14 @@ class Settings(BaseModel):
         description="Maximum allowed HTTP request body size in bytes. "
                     "Requests exceeding this limit are rejected with HTTP 413.",
     )
+    SECRET_KEY: str = Field(
+        default="development-secret-key-change-in-production",
+        description="Flask secret key for securely signing the session cookie.",
+    )
+    SESSION_COOKIE_SECURE: bool = Field(
+        default=False,
+        description="Set to True in production to ensure cookies are only sent over HTTPS.",
+    )
 
     # --- Database ---
     DATABASE_URL: str = Field(

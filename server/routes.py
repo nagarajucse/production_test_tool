@@ -9,11 +9,13 @@ Endpoints:
 """
 
 import logging
+import os
 from datetime import datetime, timezone
 from functools import wraps
 
-from flask import Blueprint, Response, jsonify, request, session, redirect, url_for
+from flask import Blueprint, Response, jsonify, request, session, redirect, url_for, send_file
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy import select
 
 from database import get_db
 from models import SensorTestResult, User
@@ -22,8 +24,6 @@ from schemas import SensorTestResultSchema
 logger = logging.getLogger("dms.routes")
 
 api_bp = Blueprint("api", __name__)
-import os
-from flask import send_file
 
 
 def login_required(f):
@@ -68,7 +68,6 @@ def register_user() -> tuple[Response, int]:
         return jsonify({"status": "error", "message": "Password must be at least 6 characters long."}), 400
 
     try:
-        from sqlalchemy import select
         with get_db() as db:
             # Check if user already exists
             existing_user = db.scalar(select(User).where(User.username == username))
@@ -99,7 +98,6 @@ def login_user() -> tuple[Response, int]:
         return jsonify({"status": "error", "message": "Username and password are required."}), 400
 
     try:
-        from sqlalchemy import select
         with get_db() as db:
             user = db.scalar(select(User).where(User.username == username))
             if not user or not check_password_hash(user.password_hash, password):
@@ -107,6 +105,7 @@ def login_user() -> tuple[Response, int]:
 
             # Logged in successfully: set session variables
             session.clear()
+            session.permanent = True
             session["user_id"] = str(user.id)
             session["username"] = user.username
 

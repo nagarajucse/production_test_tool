@@ -14,8 +14,7 @@ Table: sensor_test_results
 import uuid
 from datetime import datetime, timezone
 
-from sqlalchemy import DateTime, Integer, String, Text
-from sqlalchemy.dialects.postgresql import JSONB, UUID
+from sqlalchemy import Boolean, DateTime, Integer, String, Text, JSON
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -42,11 +41,11 @@ class SensorTestResult(Base):
     __tablename__ = "sensor_test_results"
 
     # Primary key — UUID v4, generated server-side
-    id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+    id: Mapped[str] = mapped_column(
+        String(36),
         primary_key=True,
-        default=uuid.uuid4,
-        comment="Unique record identifier (UUID v4)",
+        default=lambda: str(uuid.uuid4()),
+        comment="Unique record identifier (UUID v4 as string)",
     )
 
     # --- Sensor Identity ---
@@ -136,7 +135,7 @@ class SensorTestResult(Base):
 
     # --- Audit Trail ---
     raw_json: Mapped[dict] = mapped_column(
-        JSONB,
+        JSON,
         nullable=False,
         comment="Complete original validated JSON payload (immutable audit record)",
     )
@@ -146,3 +145,60 @@ class SensorTestResult(Base):
             f"<SensorTestResult id={self.id} sensor_sn={self.sensor_sn!r} "
             f"model={self.model!r} work_order={self.work_order!r}>"
         )
+
+
+class User(Base):
+    """
+    ORM model representing a system user/administrator.
+    
+    Used for dashboard authentication and authorization.
+    """
+
+    __tablename__ = "users"
+
+    id: Mapped[str] = mapped_column(
+        String(36),
+        primary_key=True,
+        default=lambda: str(uuid.uuid4()),
+        comment="Unique user identifier",
+    )
+    username: Mapped[str] = mapped_column(
+        String(50),
+        unique=True,
+        index=True,
+        nullable=False,
+        comment="Login username",
+    )
+    password_hash: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False,
+        comment="Werkzeug hashed password",
+    )
+    is_active: Mapped[bool] = mapped_column(
+        Boolean,
+        default=True,
+        nullable=False,
+        comment="Whether the user account is active",
+    )
+    is_admin: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
+        nullable=False,
+        comment="Whether the user has admin privileges",
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+        comment="Record creation timestamp",
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+        onupdate=lambda: datetime.now(timezone.utc),
+        comment="Record last update timestamp",
+    )
+
+    def __repr__(self) -> str:
+        return f"<User id={self.id} username={self.username!r}>"

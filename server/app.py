@@ -99,6 +99,10 @@ def create_app() -> Flask:
     app.config["MAX_CONTENT_LENGTH"] = settings.MAX_CONTENT_LENGTH  # reject oversized bodies → HTTP 413
     app.config["JSON_SORT_KEYS"] = False
     app.config["SECRET_KEY"] = settings.SECRET_KEY
+    app.config["SESSION_COOKIE_HTTPONLY"] = True
+    app.config["SESSION_COOKIE_SECURE"] = settings.SESSION_COOKIE_SECURE
+    app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
+    app.config["PERMANENT_SESSION_LIFETIME"] = 86400  # 1 day
 
     # --- Register Blueprints ---
     app.register_blueprint(api_bp)
