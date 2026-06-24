@@ -17,9 +17,7 @@ __pycache__/
 dist/
 build/
 
-# Environment variables
-.env
-*.env
+
 
 # Logs (keep folder, ignore content)
 logs/*.log
