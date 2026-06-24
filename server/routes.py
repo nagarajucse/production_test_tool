@@ -10,6 +10,8 @@ Endpoints:
 
 import logging
 import os
+import base64
+import io
 from datetime import datetime, timezone
 from functools import wraps
 
@@ -157,6 +159,38 @@ def ingest_test_result() -> tuple[Response, int]:
         }), 400
 
     try:
+        # Extract and decode image data
+        image_b64 = None
+        for key in ["image", "fingerprint_image", "fingerprint", "image_data", "base64_image"]:
+            if key in payload and isinstance(payload[key], str):
+                image_b64 = payload[key]
+                break
+
+        image_name = payload.get("image_name")
+        image_format = payload.get("image_format")
+
+        fingerprint_image_bytes = None
+        if image_b64:
+            if image_b64.startswith("data:image"):
+                try:
+                    prefix, data_part = image_b64.split(",", 1)
+                    if not image_format:
+                        if "/" in prefix:
+                            parts = prefix.split(";")[0].split("/")
+                            if len(parts) > 1:
+                                image_format = parts[1]
+                    image_b64 = data_part
+                except Exception:
+                    pass
+
+            try:
+                fingerprint_image_bytes = base64.b64decode(image_b64)
+            except Exception as e:
+                logger.warning("Failed to decode base64 image: %s", e)
+
+        if fingerprint_image_bytes and not image_format:
+            image_format = "png"
+
         record = SensorTestResult(
             sensor_sn=validated.sensor_sn,
             model=validated.model,
@@ -171,10 +205,24 @@ def ingest_test_result() -> tuple[Response, int]:
             timestamp=validated.timestamp,
             received_at=datetime.now(timezone.utc),
             client_ip=client_ip,
-            raw_json=payload,
+            image_name=image_name,
+            image_format=image_format,
+            fingerprint_image=fingerprint_image_bytes,
         )
         # Capture values inside the session block to avoid DetachedInstanceError
         with get_db() as db:
+            logger.info("===== DEBUG BEFORE INSERT =====")
+            logger.info("image_name=%s", image_name)
+            logger.info("image_format=%s", image_format)
+
+            if fingerprint_image_bytes:
+                logger.info(
+                    "fingerprint_image_bytes length=%s",
+                    len(fingerprint_image_bytes)
+                )
+            else:
+                logger.error("fingerprint_image_bytes is None")
+            
             db.add(record)
             db.flush()
             record_id = str(record.id)
@@ -194,6 +242,69 @@ def ingest_test_result() -> tuple[Response, int]:
             "status": "error",
             "message": "An internal server error occurred.",
         }), 500
+
+
+# ---------------------------------------------------------------------------
+# GET /image/<id> — Retrieve decoded fingerprint image for preview
+# ---------------------------------------------------------------------------
+
+@api_bp.route("/image/<record_id>", methods=["GET"])
+@login_required
+def get_image(record_id: str) -> Response:
+    from database import get_db
+    try:
+        with get_db() as db:
+            record = db.scalar(select(SensorTestResult).where(SensorTestResult.id == record_id))
+            if not record:
+                return jsonify({"status": "error", "message": "Record not found."}), 404
+            
+            image_bytes = record.fingerprint_image
+            if not image_bytes:
+                return jsonify({"status": "error", "message": "Image not found in record payload."}), 404
+            
+            logger.info("GET /image/%s", record_id)
+            logger.info("image_size=%s", len(image_bytes))
+            logger.info("image_format=%s", record.image_format)
+            
+            return send_file(
+                io.BytesIO(image_bytes),
+                mimetype=f"image/{record.image_format or 'png'}",
+                as_attachment=False
+            )
+    except Exception as exc:
+        logger.exception("GET /image/%s failed: %s", record_id, exc)
+        return jsonify({"status": "error", "message": "Failed to retrieve image."}), 500
+
+
+# ---------------------------------------------------------------------------
+# GET /download/<id> — Download decoded fingerprint image
+# ---------------------------------------------------------------------------
+
+@api_bp.route("/download/<record_id>", methods=["GET"])
+@login_required
+def download_image(record_id: str) -> Response:
+    from database import get_db
+    try:
+        with get_db() as db:
+            record = db.scalar(select(SensorTestResult).where(SensorTestResult.id == record_id))
+            if not record:
+                return jsonify({"status": "error", "message": "Record not found."}), 404
+            
+            image_bytes = record.fingerprint_image
+            if not image_bytes:
+                return jsonify({"status": "error", "message": "Image not found in record payload."}), 404
+            
+            filename = record.image_name or f"fingerprint_{record.sensor_sn}_{record_id[:8]}.{record.image_format or 'png'}"
+            
+            return send_file(
+                io.BytesIO(image_bytes),
+                mimetype=f"image/{record.image_format or 'png'}",
+                as_attachment=True,
+                download_name=filename
+            )
+    except Exception as exc:
+        logger.exception("GET /download/%s failed: %s", record_id, exc)
+        return jsonify({"status": "error", "message": "Failed to download image."}), 500
 
 
 # ---------------------------------------------------------------------------
@@ -223,7 +334,8 @@ def get_data() -> tuple[Response, int]:
         SELECT id, sensor_sn, model, sensor_mac,
                quality_score_afiq, nfiq_score, minutiae_count, verification_score,
                part_number, work_order, tester_id,
-               timestamp, received_at, client_ip
+               timestamp, received_at, client_ip,
+               image_name, image_format
         FROM sensor_test_results
         {where}
         ORDER BY received_at DESC
@@ -236,6 +348,12 @@ def get_data() -> tuple[Response, int]:
         with engine.connect() as conn:
             total = conn.execute(sql_count, params).scalar()
             rows  = conn.execute(sql_rows, params).mappings().all()
+
+        logger.info("GET /data returned %s rows", len(rows))
+        if rows:
+            logger.info("record=%s", rows[0]["id"])
+            logger.info("image_name=%s", rows[0]["image_name"])
+            logger.info("image_format=%s", rows[0]["image_format"])
 
         return jsonify({
             "status":   "ok",
@@ -258,6 +376,10 @@ def get_data() -> tuple[Response, int]:
                     "timestamp":          r["timestamp"].isoformat() if r["timestamp"] else None,
                     "received_at":        r["received_at"].isoformat() if r["received_at"] else None,
                     "client_ip":          r["client_ip"],
+                    "image_name":         r["image_name"],
+                    "image_format":       r["image_format"],
+                    "has_image":          bool(r["image_name"] or r["image_format"]),
+                    "image_url":          f"/image/{r['id']}"
                 }
                 for r in rows
             ],

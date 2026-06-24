@@ -180,3 +180,19 @@ Checklist:
      Correct  : postgresql://user:pass@host:5432/dbname
      Incorrect: postgresql+asyncpg://...  (async -- will crash!)
 ============================================================
+2026-06-23T18:54:05+0530 [CRITICAL] [dms.app] 
+============================================================
+STARTUP FAILURE — Cannot connect to Database
+============================================================
+DATABASE_URL : mysql+pymysql://***:***@localhost:3306/aradata
+Error        : (pymysql.err.OperationalError) (2003, "Can't connect to MySQL server on 'localhost' (timed out)")
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+
+Checklist:
+  1. Is MySQL/PostgreSQL running?  ->  services.msc / docker ps
+  2. Does the database exist?  ->  CREATE DATABASE test_manager;
+  3. Are credentials correct in .env?
+  4. Is DATABASE_URL using standard/pymysql format?
+     Correct  : mysql+pymysql://user:pass@host:3306/dbname
+     Incorrect: mysql+aiomysql://...  (async -- not supported in sync app)
+============================================================

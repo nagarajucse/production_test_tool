@@ -20,8 +20,8 @@ class TestResultService:
     - Persists records using SQL Repositories
     - Returns structured outcome payloads (ACK/NACK)
     """
-    async def process_raw_test_result(
-        self, client_ip: str, client_port: int, raw_json_str: str
+    async def process_test_result(
+        self, client_ip: str, client_port: int, payload_str: str
     ) -> Dict[str, Any]:
         """
         Decodes incoming connection test string, validates schema, applies policies, and persists.
@@ -29,14 +29,14 @@ class TestResultService:
         Args:
             client_ip: Remote network interface IP address.
             client_port: Remote network port.
-            raw_json_str: Plain text from socket stream.
+            payload_str: Plain text from socket stream.
             
         Returns:
             Dictionary payload matching standard Success/Failure/Error JSON contracts.
         """
         # 1. Structural parse check
         try:
-            raw_payload = json.loads(raw_json_str)
+            raw_payload = json.loads(payload_str)
             if not isinstance(raw_payload, dict):
                 return {
                     "status": "failed",
@@ -86,7 +86,6 @@ class TestResultService:
                     result=validated_data.result,
                     execution_time=validated_data.execution_time,
                     timestamp=validated_data.timestamp,
-                    raw_json=raw_payload,
                     client_ip=client_ip
                 )
 
@@ -127,5 +126,5 @@ class TestResultService:
         Adapter method implementing the RequestProcessor protocol.
         Converts the service's dictionary response to a JSON string.
         """
-        result_dict = await self.process_raw_test_result(ip, port, payload)
+        result_dict = await self.process_test_result(ip, port, payload)
         return json.dumps(result_dict)

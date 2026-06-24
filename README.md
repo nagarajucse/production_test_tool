@@ -281,8 +281,8 @@ FROM test_results
 GROUP BY device_id, result
 ORDER BY device_id;
 
--- Inspect raw JSON payload
-SELECT serial_number, raw_json
+-- Retrieve test results for a specific device
+SELECT serial_number, device_id, operator, result
 FROM test_results
 WHERE serial_number = 'SN-00001';
 ```

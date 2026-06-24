@@ -36,7 +36,6 @@ def upgrade() -> None:
         sa.Column("result", sa.String(10), nullable=False, comment="Overall test result (PASS or FAIL)"),
         sa.Column("execution_time", sa.Float(), nullable=False, comment="Duration of the test run in seconds"),
         sa.Column("timestamp", sa.DateTime(timezone=True), nullable=False, comment="Device timestamp when the test was run"),
-        sa.Column("raw_json", postgresql.JSONB(astext_type=sa.Text()), nullable=False, comment="The full raw JSON payload from the socket connection"),
         sa.Column("client_ip", sa.String(45), nullable=False, comment="IP address of the client connection that submitted this log"),
         sa.Column("received_at", sa.DateTime(timezone=True), nullable=False, comment="Timestamp when the server received the test result"),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False, comment="Record creation timestamp"),

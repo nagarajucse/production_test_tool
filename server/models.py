@@ -7,15 +7,16 @@ production test records received over HTTP POST.
 Table: sensor_test_results
   - Separate from the existing 'test_results' TCP server table.
   - Indexed on: sensor_sn, work_order, received_at for fast filtering queries.
-  - raw_json (JSONB): stores the original validated payload for audit trails.
+  - image_name, image_format, fingerprint_image: stores normalized fingerprint preview image details.
   - UUID primary key: globally unique, avoids sequential ID enumeration.
 """
 
 import uuid
 from datetime import datetime, timezone
 
-from sqlalchemy import Boolean, DateTime, Integer, String, Text, JSON
+from sqlalchemy import Boolean, DateTime, Integer, String, Text, LargeBinary
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.dialects.mysql import LONGBLOB
 
 
 class Base(DeclarativeBase):
@@ -133,11 +134,21 @@ class SensorTestResult(Base):
         comment="IP address of the client that submitted the test result",
     )
 
-    # --- Audit Trail ---
-    raw_json: Mapped[dict] = mapped_column(
-        JSON,
-        nullable=False,
-        comment="Complete original validated JSON payload (immutable audit record)",
+    # --- Fingerprint Image Preview ---
+    image_name: Mapped[str] = mapped_column(
+        String(255),
+        nullable=True,
+        comment="Name of the fingerprint image file",
+    )
+    image_format: Mapped[str] = mapped_column(
+        String(10),
+        nullable=True,
+        comment="Format of the image (e.g. png, jpg)",
+    )
+    fingerprint_image: Mapped[bytes] = mapped_column(
+        LargeBinary().with_variant(LONGBLOB, "mysql"),
+        nullable=True,
+        comment="Decoded binary fingerprint image data",
     )
 
     def __repr__(self) -> str:

@@ -30,6 +30,7 @@ import os
 import sys
 from typing import Tuple
 
+
 # ---------------------------------------------------------------------------
 # All imports wrapped in try/except so startup failures produce clear messages
 # instead of a silent exit.
@@ -249,6 +250,69 @@ def _start_wsgi_server(app: Flask) -> None:
         )
 
 
+def _migrate_database_schema(engine) -> None:
+    """
+    Automated database schema migration.
+    Drops the raw_json column and alters/adds normalized image columns with correct binary types in MySQL.
+    """
+    _app_logger.info("Running automated database schema migrations...")
+    try:
+        with engine.connect() as conn:
+            # Check existing columns in sensor_test_results table
+            result = conn.execute(text("DESCRIBE sensor_test_results"))
+            columns = {row[0]: row[1] for row in result.fetchall()}
+            _app_logger.info("Existing columns in sensor_test_results: %s", columns)
+
+            # 1. Drop raw_json column if it exists
+            if "raw_json" in columns:
+                _app_logger.info("Dropping raw_json column...")
+                try:
+                    conn.execute(text("ALTER TABLE sensor_test_results DROP COLUMN raw_json"))
+                    _app_logger.info("raw_json column dropped successfully.")
+                except Exception as e:
+                    _app_logger.warning("Failed to drop raw_json column: %s", e)
+
+            # 2. Check and modify/add fingerprint_image column to LONGBLOB
+            if "fingerprint_image" in columns:
+                col_type = columns["fingerprint_image"].lower()
+                if "blob" not in col_type:
+                    _app_logger.info("Altering fingerprint_image column type to LONGBLOB...")
+                    try:
+                        conn.execute(text("ALTER TABLE sensor_test_results MODIFY COLUMN fingerprint_image LONGBLOB NULL"))
+                        _app_logger.info("fingerprint_image column type altered to LONGBLOB successfully.")
+                    except Exception as e:
+                        _app_logger.error("Failed to alter fingerprint_image column type: %s", e)
+            else:
+                _app_logger.info("Adding fingerprint_image column as LONGBLOB...")
+                try:
+                    conn.execute(text("ALTER TABLE sensor_test_results ADD COLUMN fingerprint_image LONGBLOB NULL"))
+                    _app_logger.info("fingerprint_image column added successfully.")
+                except Exception as e:
+                    _app_logger.error("Failed to add fingerprint_image column: %s", e)
+
+            # 3. Check and add/modify image_name column
+            if "image_name" not in columns:
+                _app_logger.info("Adding image_name column...")
+                try:
+                    conn.execute(text("ALTER TABLE sensor_test_results ADD COLUMN image_name VARCHAR(255) NULL"))
+                    _app_logger.info("image_name column added successfully.")
+                except Exception as e:
+                    _app_logger.error("Failed to add image_name column: %s", e)
+
+            # 4. Check and add/modify image_format column
+            if "image_format" not in columns:
+                _app_logger.info("Adding image_format column...")
+                try:
+                    conn.execute(text("ALTER TABLE sensor_test_results ADD COLUMN image_format VARCHAR(10) NULL"))
+                    _app_logger.info("image_format column added successfully.")
+                except Exception as e:
+                    _app_logger.error("Failed to add image_format column: %s", e)
+
+            conn.commit()
+    except Exception as exc:
+        _app_logger.error("Automated database schema migration failed: %s", exc, exc_info=True)
+
+
 def _verify_database_connection() -> None:
     """
     Verifies that database is reachable BEFORE attempting schema provisioning.
@@ -265,6 +329,7 @@ def _verify_database_connection() -> None:
             conn.execute(text("SELECT 1"))
         _app_logger.info("Database connection verified successfully.")
         print("[DMS] Database connection OK.", flush=True)
+        _migrate_database_schema(engine)
     except Exception as exc:
         _sep = "=" * 60
         msg = (

@@ -7,6 +7,7 @@ which routes.py catches and returns as a structured HTTP 400 response.
 """
 
 from datetime import datetime
+from typing import Optional
 from pydantic import BaseModel, Field
 
 
@@ -34,7 +35,15 @@ class SensorTestResultSchema(BaseModel):
     work_order: str = Field(..., min_length=1, max_length=100, description="Manufacturing work order")
     tester_id: str = Field(..., min_length=1, max_length=50, description="Tester or station ID")
 
-    # Timestamp from device
     timestamp: datetime = Field(..., description="ISO-8601 test execution timestamp")
+
+    # Optional image fields
+    image_name: Optional[str] = Field(None, max_length=255, description="Name of the image file")
+    image_format: Optional[str] = Field(None, max_length=10, description="Format of the image (e.g. png, jpg)")
+    image: Optional[str] = Field(None, description="Base64 encoded fingerprint image")
+    fingerprint_image: Optional[str] = Field(None, description="Base64 encoded fingerprint image alternative key")
+    fingerprint: Optional[str] = Field(None, description="Base64 encoded fingerprint image alternative key")
+    image_data: Optional[str] = Field(None, description="Base64 encoded fingerprint image alternative key")
+    base64_image: Optional[str] = Field(None, description="Base64 encoded fingerprint image alternative key")
 
     model_config = {"str_strip_whitespace": True}

@@ -31,7 +31,6 @@ class TestDatabaseLayer(unittest.IsolatedAsyncioTestCase):
             result="PASS",
             execution_time=15.6,
             timestamp=datetime.datetime.now(datetime.timezone.utc),
-            raw_json={},
             client_ip="127.0.0.1"
         )
         
@@ -85,7 +84,7 @@ class TestDatabaseLayer(unittest.IsolatedAsyncioTestCase):
             
             mock_get_session.return_value.__aenter__.return_value = mock_session
             
-            response = await service.process_raw_test_result("127.0.0.1", 5000, json.dumps(raw_payload))
+            response = await service.process_test_result("127.0.0.1", 5000, json.dumps(raw_payload))
             
             # Assert failure return
             self.assertEqual(response["status"], "failed")
@@ -111,7 +110,7 @@ class TestDatabaseLayer(unittest.IsolatedAsyncioTestCase):
         with patch("app.services.test_result_service.get_db_session") as mock_get_session:
             mock_get_session.return_value.__aenter__.side_effect = OperationalError("select", {}, Exception("Connection refused"))
             
-            response = await service.process_raw_test_result("127.0.0.1", 5000, json.dumps(raw_payload))
+            response = await service.process_test_result("127.0.0.1", 5000, json.dumps(raw_payload))
             
             self.assertEqual(response["status"], "error")
             self.assertIn("connection unavailable", response["message"].lower())
@@ -142,7 +141,7 @@ class TestDatabaseLayer(unittest.IsolatedAsyncioTestCase):
             
             mock_get_session.return_value.__aenter__.return_value = mock_session
             
-            response = await service.process_raw_test_result("127.0.0.1", 5000, json.dumps(raw_payload))
+            response = await service.process_test_result("127.0.0.1", 5000, json.dumps(raw_payload))
             
             self.assertEqual(response["status"], "failed")
             self.assertIn("integrity constraint violation", response["errors"][0].lower())

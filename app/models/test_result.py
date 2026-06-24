@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 import uuid
 from sqlalchemy import String, Float, DateTime
-from sqlalchemy.dialects.postgresql import UUID, JSONB
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 from app.database.base import Base
 
@@ -62,11 +62,6 @@ class TestResult(Base):
         nullable=False, 
         index=True,
         comment="Device timestamp when the test was run"
-    )
-    raw_json: Mapped[dict] = mapped_column(
-        JSONB, 
-        nullable=False,
-        comment="The full raw JSON payload from the socket connection"
     )
     client_ip: Mapped[str] = mapped_column(
         String(45), 

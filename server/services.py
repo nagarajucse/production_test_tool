@@ -19,6 +19,7 @@ Error taxonomy:
 No stack traces or internal error details are ever returned to the client.
 """
 
+import base64
 import logging
 import time
 from typing import Any, Dict, Tuple
@@ -84,8 +85,40 @@ class TestResultService:
 
         # ------------------------------------------------------------------
         # Step 2: Map validated schema → ORM model
-        # The raw_json field stores the original serialised payload for audit.
+        # Extract and decode the fingerprint image from any of the standard payload fields.
         # ------------------------------------------------------------------
+        image_b64 = (
+            validated.image
+            or validated.fingerprint_image
+            or validated.fingerprint
+            or validated.image_data
+            or validated.base64_image
+        )
+        image_name = validated.image_name
+        image_format = validated.image_format
+
+        fingerprint_image_bytes = None
+        if image_b64:
+            if image_b64.startswith("data:image"):
+                try:
+                    prefix, data_part = image_b64.split(",", 1)
+                    if not image_format:
+                        if "/" in prefix:
+                            parts = prefix.split(";")[0].split("/")
+                            if len(parts) > 1:
+                                image_format = parts[1]
+                    image_b64 = data_part
+                except Exception:
+                    pass
+
+            try:
+                fingerprint_image_bytes = base64.b64decode(image_b64)
+            except Exception as e:
+                logger.warning("Failed to decode base64 image: %s", e)
+
+        if fingerprint_image_bytes and not image_format:
+            image_format = "png"
+
         record = SensorTestResult(
             sensor_sn=validated.sensor_sn,
             model=validated.model,
@@ -99,7 +132,9 @@ class TestResultService:
             tester_id=validated.tester_id,
             timestamp=validated.timestamp,
             client_ip=client_ip,
-            raw_json=validated.to_dict(),
+            image_name=image_name,
+            image_format=image_format,
+            fingerprint_image=fingerprint_image_bytes,
         )
 
         # ------------------------------------------------------------------

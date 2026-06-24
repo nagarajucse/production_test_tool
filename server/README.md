@@ -322,8 +322,8 @@ FROM sensor_test_results
 GROUP BY model
 ORDER BY total_tests DESC;
 
--- Inspect the raw JSON audit trail
-SELECT sensor_sn, raw_json
+-- Retrieve fingerprint image details
+SELECT sensor_sn, image_name, image_format
 FROM sensor_test_results
 WHERE sensor_sn = 'A400202401010111111';
 ```
