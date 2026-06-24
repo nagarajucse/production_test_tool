@@ -26,8 +26,17 @@ class DatabaseConnectionManager:
 
         logger.info("Initializing database connection engine...")
         try:
+            # Translate connection URL to async driver scheme
+            db_url = self.database_url
+            if db_url.startswith("mysql+pymysql://"):
+                db_url = db_url.replace("mysql+pymysql://", "mysql+aiomysql://", 1)
+            elif db_url.startswith("mysql://"):
+                db_url = db_url.replace("mysql://", "mysql+aiomysql://", 1)
+            elif db_url.startswith("postgresql://"):
+                db_url = db_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+
             self._engine = create_async_engine(
-                self.database_url,
+                db_url,
                 pool_size=20,            # Pre-allocated connection pool size
                 max_overflow=10,         # Max overflow connections beyond pool size
                 pool_timeout=30.0,       # Socket checkout timeout (seconds)

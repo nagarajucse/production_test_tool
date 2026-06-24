@@ -66,12 +66,37 @@ def load_settings() -> Settings:
     
     If configuration validation fails, prints a descriptive traceback to stderr and exits immediately.
     """
-    data: Dict[str, Any] = {}
+    raw_data: Dict[str, str] = {}
     for field_name in Settings.model_fields:
         env_value = os.environ.get(field_name)
-        # Skip empty environment values so they fallback to model defaults
         if env_value is not None and env_value.strip() != "":
-            data[field_name] = env_value
+            raw_data[field_name] = env_value.strip()
+
+    data: Dict[str, Any] = {}
+
+    # Process SERVER_HOST first if it exists, to potentially extract port
+    if "SERVER_HOST" in raw_data:
+        host_val = raw_data["SERVER_HOST"]
+        if host_val.startswith("http://"):
+            host_val = host_val[7:]
+        elif host_val.startswith("https://"):
+            host_val = host_val[8:]
+        host_val = host_val.split("/")[0]
+
+        if ":" in host_val:
+            parts = host_val.split(":")
+            host_val = parts[0]
+            try:
+                data["SERVER_PORT"] = int(parts[1])
+            except ValueError:
+                pass
+        data["SERVER_HOST"] = host_val
+
+    # Process all other fields
+    for field_name, env_value in raw_data.items():
+        if field_name == "SERVER_HOST":
+            continue
+        data[field_name] = env_value
 
     try:
         return Settings(**data)

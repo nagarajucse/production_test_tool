@@ -1,6 +1,6 @@
 # Production Test Management System — Phase 1
 
-A high-performance, enterprise-grade **asynchronous TCP server** that receives JSON test result packets from manufacturing floor desktop clients, validates them, and persists them to PostgreSQL.
+A high-performance, enterprise-grade **asynchronous TCP server** that receives JSON test result packets from manufacturing floor desktop clients, validates them, and persists them to MySQL.
 
 ---
 

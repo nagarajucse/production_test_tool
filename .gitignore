@@ -1,0 +1,43 @@
+# Python virtual environment
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Compiled extensions
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Environment variables
+.env
+*.env
+
+# Logs (keep folder, ignore content)
+logs/*.log
+server/logs/*.log
+
+# Database
+*.db
+*.sqlite3
+
+# VS Code
+.vscode/
+
+# Migrations (if auto-generated)
+# migrations/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Alembic (optional - uncomment if not needed)
+# alembic.ini

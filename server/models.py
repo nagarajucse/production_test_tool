@@ -14,8 +14,7 @@ Table: sensor_test_results
 import uuid
 from datetime import datetime, timezone
 
-from sqlalchemy import DateTime, Integer, String, Text
-from sqlalchemy.dialects.postgresql import JSONB, UUID
+from sqlalchemy import DateTime, Integer, String, Text, Uuid, JSON
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -43,7 +42,7 @@ class SensorTestResult(Base):
 
     # Primary key — UUID v4, generated server-side
     id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
+        Uuid(as_uuid=True),
         primary_key=True,
         default=uuid.uuid4,
         comment="Unique record identifier (UUID v4)",
@@ -136,7 +135,7 @@ class SensorTestResult(Base):
 
     # --- Audit Trail ---
     raw_json: Mapped[dict] = mapped_column(
-        JSONB,
+        JSON,
         nullable=False,
         comment="Complete original validated JSON payload (immutable audit record)",
     )
@@ -146,3 +145,38 @@ class SensorTestResult(Base):
             f"<SensorTestResult id={self.id} sensor_sn={self.sensor_sn!r} "
             f"model={self.model!r} work_order={self.work_order!r}>"
         )
+
+
+class User(Base):
+    """
+    ORM model for user credentials to manage dashboard access.
+    """
+    __tablename__ = "users"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        Uuid(as_uuid=True),
+        primary_key=True,
+        default=uuid.uuid4,
+        comment="Unique user identifier (UUID v4)",
+    )
+    username: Mapped[str] = mapped_column(
+        String(50),
+        unique=True,
+        nullable=False,
+        index=True,
+        comment="Unique user login name",
+    )
+    password_hash: Mapped[str] = mapped_column(
+        String(255),
+        nullable=False,
+        comment="Salted SHA-256 hashed password value",
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc),
+        comment="Timestamp when user was registered",
+    )
+
+    def __repr__(self) -> str:
+        return f"<User id={self.id} username={self.username!r}>"

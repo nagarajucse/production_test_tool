@@ -37,8 +37,15 @@ logger = logging.getLogger("dms.database")
 # pool_recycle=1800: forces connections to be replaced after 30 minutes,
 #   avoiding PostgreSQL's default idle connection timeout.
 # ---------------------------------------------------------------------------
+# Convert database URLs to use appropriate synchronous drivers (pymysql for MySQL, pg8000 for PostgreSQL fallback)
+db_url = settings.DATABASE_URL
+if db_url.startswith("mysql://"):
+    db_url = db_url.replace("mysql://", "mysql+pymysql://", 1)
+elif db_url.startswith("postgresql://"):
+    db_url = db_url.replace("postgresql://", "postgresql+pg8000://", 1)
+
 _engine: Engine = create_engine(
-    settings.DATABASE_URL,
+    db_url,
     pool_size=20,          # steady-state pool — pre-allocated for concurrency
     max_overflow=10,       # burst capacity beyond pool_size
     pool_timeout=30,       # seconds to wait for a connection before raising

@@ -9,11 +9,11 @@ Endpoints:
 """
 
 import logging
-from datetime import datetime, timezone
+from datetime import datetime
 from functools import wraps
 
 from flask import Blueprint, Response, jsonify, request, session, redirect, url_for
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import check_password_hash
 
 from database import get_db
 from models import SensorTestResult, User
@@ -52,41 +52,6 @@ def serve_login():
     return send_file(login_path, mimetype="text/html")
 
 
-@api_bp.route("/register", methods=["POST"])
-def register_user() -> tuple[Response, int]:
-    payload = request.get_json(silent=True) or {}
-    username = payload.get("username", "").strip()
-    password = payload.get("password", "").strip()
-
-    if not username or not password:
-        return jsonify({"status": "error", "message": "Username and password are required."}), 400
-
-    if len(username) < 3 or len(username) > 50:
-        return jsonify({"status": "error", "message": "Username must be between 3 and 50 characters."}), 400
-
-    if len(password) < 6:
-        return jsonify({"status": "error", "message": "Password must be at least 6 characters long."}), 400
-
-    try:
-        from sqlalchemy import select
-        with get_db() as db:
-            # Check if user already exists
-            existing_user = db.scalar(select(User).where(User.username == username))
-            if existing_user:
-                return jsonify({"status": "error", "message": "Username is already taken."}), 400
-
-            # Hash the password and save
-            pwd_hash = generate_password_hash(password)
-            new_user = User(username=username, password_hash=pwd_hash)
-            db.add(new_user)
-            db.flush()
-            user_id = str(new_user.id)
-
-        logger.info("New user registered successfully: %s", username)
-        return jsonify({"status": "ok", "message": "Registration successful. Please log in."}), 201
-    except Exception as exc:
-        logger.exception("User registration failed: %s", exc)
-        return jsonify({"status": "error", "message": "An internal server error occurred."}), 500
 
 
 @api_bp.route("/login", methods=["POST"])

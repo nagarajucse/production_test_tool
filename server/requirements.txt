@@ -9,7 +9,7 @@ Flask==3.1.1
 
 # ORM & Database Driver (synchronous — matches Flask's threading model)
 SQLAlchemy==2.0.50
-psycopg2-binary==2.9.9
+pymysql==1.2.0
 
 # Data Validation
 pydantic==2.13.4
