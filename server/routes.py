@@ -12,6 +12,10 @@ import logging
 import os
 import base64
 import io
+import threading
+import openpyxl
+from openpyxl.drawing.image import Image as OpenpyxlImage
+from PIL import Image as PILImage
 from datetime import datetime, timezone
 from functools import wraps
 
@@ -26,6 +30,68 @@ from schemas import SensorTestResultSchema
 logger = logging.getLogger("dms.routes")
 
 api_bp = Blueprint("api", __name__)
+
+excel_lock = threading.Lock()
+EXCEL_PATH = os.path.join(os.path.dirname(__file__), "Datasheet.xlsx")
+
+def append_to_excel(record: SensorTestResult):
+    with excel_lock:
+        if not os.path.exists(EXCEL_PATH):
+            wb = openpyxl.Workbook()
+            ws = wb.active
+            ws.title = "Test Results"
+            headers = ["Date/Time", "Sensor SN", "MAC Address", "Model", "AFIQ Score", "NFIQ Score", "Minutiae", "Work Order", "Tester", "Image Format", "Fingerprint Photo"]
+            ws.append(headers)
+        else:
+            wb = openpyxl.load_workbook(EXCEL_PATH)
+            ws = wb.active
+            # Ensure headers exist
+            if ws.max_row <= 1 and ws.cell(row=1, column=1).value is None:
+                headers = ["Date/Time", "Sensor SN", "MAC Address", "Model", "AFIQ Score", "NFIQ Score", "Minutiae", "Work Order", "Tester", "Image Format", "Fingerprint Photo"]
+                ws.append(headers)
+        
+        row = [
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            record.sensor_sn or "",
+            record.sensor_mac or "",
+            record.model or "",
+            record.quality_score_afiq if record.quality_score_afiq is not None else "",
+            record.nfiq_score if record.nfiq_score is not None else "",
+            record.minutiae_count if record.minutiae_count is not None else "",
+            record.work_order or "",
+            record.tester_id or "",
+            record.image_format or ""
+        ]
+        ws.append(row)
+        
+        # Add image
+        if record.fingerprint_image:
+            try:
+                row_idx = ws.max_row
+                img_data = io.BytesIO(record.fingerprint_image)
+                pil_img = PILImage.open(img_data)
+                orig_w, orig_h = pil_img.size
+                ratio = 100.0 / orig_h
+                new_w = int(orig_w * ratio)
+                
+                # Re-create BytesIO for openpyxl because PIL consumes it
+                img_data.seek(0)
+                xl_img = OpenpyxlImage(img_data)
+                xl_img.width = new_w
+                xl_img.height = 100
+                
+                col_letter = "K" # 11th column is Photo
+                cell_ref = f"{col_letter}{row_idx}"
+                ws.add_image(xl_img, cell_ref)
+                
+                ws.row_dimensions[row_idx].height = 80
+                current_w = ws.column_dimensions[col_letter].width
+                if current_w is None or current_w < (new_w / 7.0):
+                    ws.column_dimensions[col_letter].width = (new_w / 7.0) + 2
+            except Exception as e:
+                logger.error("Error adding image to excel: %s", e)
+                
+        wb.save(EXCEL_PATH)
 
 
 def login_required(f):
@@ -230,6 +296,10 @@ def ingest_test_result() -> tuple[Response, int]:
             record_wo = record.work_order
 
         logger.info("POST / stored record id=%s sensor_sn=%s work_order=%s", record_id, record_sn, record_wo)
+        try:
+            append_to_excel(record)
+        except Exception as e:
+            logger.error("Failed to append to excel: %s", e)
         return jsonify({
             "status": "ok",
             "message": "Test result stored.",
@@ -447,3 +517,10 @@ def health_check() -> tuple[Response, int]:
     except Exception as exc:
         logger.error("GET /health — database unreachable: %s", exc)
         return jsonify({"status": "error", "database": "unreachable", "timestamp": now}), 503
+
+@api_bp.route("/download_datasheet", methods=["GET"])
+@login_required
+def download_datasheet():
+    if not os.path.exists(EXCEL_PATH):
+        return jsonify({"status": "error", "message": "Datasheet does not exist yet."}), 404
+    return send_file(EXCEL_PATH, as_attachment=True, download_name="Datasheet.xlsx")

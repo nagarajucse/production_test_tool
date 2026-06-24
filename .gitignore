@@ -25,3 +25,6 @@ env/
 # OS Files
 .DS_Store
 Thumbs.db
+
+# Dynamic Datasheets
+server/Datasheet.xlsx
