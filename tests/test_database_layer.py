@@ -1,5 +1,6 @@
 import asyncio
 import datetime
+from zoneinfo import ZoneInfo
 import json
 import unittest
 from unittest.mock import AsyncMock, MagicMock, patch
@@ -30,7 +31,7 @@ class TestDatabaseLayer(unittest.IsolatedAsyncioTestCase):
             firmware="1.2.0",
             result="PASS",
             execution_time=15.6,
-            timestamp=datetime.datetime.now(datetime.timezone.utc),
+            timestamp=datetime.datetime.now(ZoneInfo("Asia/Kolkata")),
             client_ip="127.0.0.1"
         )
         

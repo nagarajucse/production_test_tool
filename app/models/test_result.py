@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 import uuid
 from sqlalchemy import String, Float, DateTime
 from sqlalchemy.dialects.postgresql import UUID
@@ -70,20 +71,20 @@ class TestResult(Base):
     )
     received_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), 
-        default=lambda: datetime.now(timezone.utc), 
+        default=lambda: datetime.now(ZoneInfo("Asia/Kolkata")), 
         nullable=False,
         comment="Timestamp when the server received the test result"
     )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), 
-        default=lambda: datetime.now(timezone.utc), 
+        default=lambda: datetime.now(ZoneInfo("Asia/Kolkata")), 
         nullable=False,
         comment="Record creation timestamp"
     )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), 
-        default=lambda: datetime.now(timezone.utc), 
-        onupdate=lambda: datetime.now(timezone.utc), 
+        default=lambda: datetime.now(ZoneInfo("Asia/Kolkata")), 
+        onupdate=lambda: datetime.now(ZoneInfo("Asia/Kolkata")), 
         nullable=False,
         comment="Record update timestamp"
     )

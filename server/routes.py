@@ -52,7 +52,7 @@ def append_to_excel(record: SensorTestResult):
                 ws.append(headers)
         
         row = [
-            record.received_at.strftime("%Y-%m-%d %H:%M:%S") if record.received_at else "",
+            record.received_at.strftime("%d-%b-%Y %I:%M %p") if record.received_at else "",
             record.sensor_sn or "",
             record.sensor_mac or "",
             record.model or "",
@@ -608,7 +608,7 @@ def download_datasheet():
         
         for record in rows:
             row = [
-                record["received_at"].strftime("%Y-%m-%d %H:%M:%S") if record["received_at"] else "",
+                record["received_at"].strftime("%d-%b-%Y %I:%M %p") if record["received_at"] else "",
                 record["sensor_sn"] or "",
                 record["sensor_mac"] or "",
                 record["model"] or "",
