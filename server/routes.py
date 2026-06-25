@@ -17,6 +17,7 @@ import openpyxl
 from openpyxl.drawing.image import Image as OpenpyxlImage
 from PIL import Image as PILImage
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 from functools import wraps
 
 from flask import Blueprint, Response, jsonify, request, session, redirect, url_for, send_file
@@ -51,7 +52,7 @@ def append_to_excel(record: SensorTestResult):
                 ws.append(headers)
         
         row = [
-            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            record.received_at.strftime("%Y-%m-%d %H:%M:%S") if record.received_at else "",
             record.sensor_sn or "",
             record.sensor_mac or "",
             record.model or "",
@@ -322,7 +323,7 @@ def ingest_test_result() -> tuple[Response, int]:
             work_order=validated.work_order,
             tester_id=validated.tester_id,
             timestamp=validated.timestamp,
-            received_at=datetime.now(timezone.utc),
+            received_at=datetime.now(ZoneInfo("Asia/Kolkata")),
             client_ip=client_ip,
             image_name=image_name,
             image_format=image_format,
@@ -562,7 +563,7 @@ def health_check() -> tuple[Response, int]:
     from database import get_engine
     from sqlalchemy import text
 
-    now = datetime.now(timezone.utc).isoformat()
+    now = datetime.now(ZoneInfo("Asia/Kolkata")).isoformat()
     try:
         engine = get_engine()
         with engine.connect() as conn:

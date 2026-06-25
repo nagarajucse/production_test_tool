@@ -13,6 +13,7 @@ Table: sensor_test_results
 
 import uuid
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 
 from sqlalchemy import Boolean, DateTime, Integer, String, Text, LargeBinary
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
@@ -117,13 +118,13 @@ class SensorTestResult(Base):
     received_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
-        default=lambda: datetime.now(timezone.utc),
+        default=lambda: datetime.now(ZoneInfo("Asia/Kolkata")),
         comment="Server-side timestamp when the HTTP request was received",
     )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
-        default=lambda: datetime.now(timezone.utc),
+        default=lambda: datetime.now(ZoneInfo("Asia/Kolkata")),
         comment="Record creation timestamp",
     )
 
@@ -200,14 +201,14 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
-        default=lambda: datetime.now(timezone.utc),
+        default=lambda: datetime.now(ZoneInfo("Asia/Kolkata")),
         comment="Record creation timestamp",
     )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
-        default=lambda: datetime.now(timezone.utc),
-        onupdate=lambda: datetime.now(timezone.utc),
+        default=lambda: datetime.now(ZoneInfo("Asia/Kolkata")),
+        onupdate=lambda: datetime.now(ZoneInfo("Asia/Kolkata")),
         comment="Record last update timestamp",
     )
 
