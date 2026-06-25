@@ -272,6 +272,13 @@
             background: rgba(255, 255, 255, 0.1);
         }
 
+        .filter-btn.active {
+            background: rgba(46, 168, 255, 0.1);
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 0 10px rgba(46, 168, 255, 0.3);
+        }
+
         .btn-ghost {
             background: transparent;
             color: var(--text-secondary);
@@ -1216,6 +1223,35 @@
             </button>
         </div>
 
+        <!-- NEW Date Filter Bar -->
+        <div class="config-bar" style="margin-bottom: 20px; flex-wrap: wrap;">
+            <div style="width: 100%; font-size: 14px; font-weight: 600; color: var(--text-secondary); margin-bottom: 12px; display: block;">DATE FILTERS</div>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+                <button class="btn btn-secondary filter-btn" data-filter="today" onclick="selectDateFilter(this, 'today')">Today</button>
+                <button class="btn btn-secondary filter-btn" data-filter="7days" onclick="selectDateFilter(this, '7days')">7 Days</button>
+                <button class="btn btn-secondary filter-btn" data-filter="30days" onclick="selectDateFilter(this, '30days')">30 Days</button>
+                <button class="btn btn-secondary filter-btn" data-filter="month" onclick="selectDateFilter(this, 'month')">This Month</button>
+                
+                <div style="width: 1px; height: 24px; background: var(--border); margin: 0 8px;"></div>
+                
+                <span style="font-size: 13px; color: var(--text-secondary);">From Date</span>
+                <input type="date" class="input-text" id="filterFromDate" style="width: 140px; padding: 6px 10px;" onchange="selectDateFilter(null, 'custom')" />
+                <span style="font-size: 13px; color: var(--text-secondary);">To Date</span>
+                <input type="date" class="input-text" id="filterToDate" style="width: 140px; padding: 6px 10px;" onchange="selectDateFilter(null, 'custom')" />
+                
+                <div style="width: 1px; height: 24px; background: var(--border); margin: 0 8px;"></div>
+                
+                <select class="input-text" id="filterTester" style="width: 140px; padding: 6px 10px;">
+                    <option value="all">Tester: All</option>
+                </select>
+                
+                <div style="width: 1px; height: 24px; background: var(--border); margin: 0 8px;"></div>
+                
+                <button class="btn btn-primary" onclick="applyFilters()">Apply Filter</button>
+                <button class="btn btn-ghost" onclick="resetFilters()">Reset</button>
+            </div>
+        </div>
+
         <!-- Stats -->
         <div class="stats-grid">
             <div class="stat-card">
@@ -1520,11 +1556,18 @@
         let isPanning = false;
         let startPanX = 0;
         let startPanY = 0;
+        
+        // Filter State
+        let currentDateFilter = '';
+        let currentStartDate = '';
+        let currentEndDate = '';
+        let currentTester = 'all';
 
         // -- Init -------------------------------------------------------------------
         document.addEventListener('DOMContentLoaded', () => {
             if (BASE_URL) {
                 document.getElementById('serverUrl').value = BASE_URL;
+                loadTesters();
                 loadAll();
             }
 
@@ -1532,6 +1575,73 @@
             // Since we can't reliably read the flask session from JS, leaving as Admin
             // The API doesn't expose a /me endpoint in the python code.
         });
+
+        // -- Filter Logic -----------------------------------------------------------
+        async function loadTesters() {
+            if (!BASE_URL) return;
+            try {
+                const r = await fetch(`${BASE_URL}/testers`);
+                if (!r.ok) return;
+                const d = await r.json();
+                if (d.status === 'ok') {
+                    const sel = document.getElementById('filterTester');
+                    const currentVal = sel.value;
+                    sel.innerHTML = '<option value="all">Tester: All</option>';
+                    d.testers.forEach(t => {
+                        const opt = document.createElement('option');
+                        opt.value = t;
+                        opt.textContent = `Tester: ${t}`;
+                        sel.appendChild(opt);
+                    });
+                    sel.value = currentVal;
+                }
+            } catch (e) {
+                console.warn('Failed to load testers', e);
+            }
+        }
+
+        function selectDateFilter(btn, filterName) {
+            currentDateFilter = filterName;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            if (btn) {
+                btn.classList.add('active');
+                document.getElementById('filterFromDate').value = '';
+                document.getElementById('filterToDate').value = '';
+            }
+        }
+
+        function applyFilters() {
+            currentStartDate = document.getElementById('filterFromDate').value;
+            currentEndDate = document.getElementById('filterToDate').value;
+            currentTester = document.getElementById('filterTester').value;
+            if ((currentStartDate || currentEndDate) && currentDateFilter !== 'custom') {
+                selectDateFilter(null, 'custom');
+            }
+            currentPage = 1;
+            loadAll();
+        }
+
+        function resetFilters() {
+            currentDateFilter = '';
+            currentStartDate = '';
+            currentEndDate = '';
+            currentTester = 'all';
+            
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('filterFromDate').value = '';
+            document.getElementById('filterToDate').value = '';
+            document.getElementById('filterTester').value = 'all';
+            
+            currentPage = 1;
+            loadAll();
+        }
+        
+        function appendFilterParams(params) {
+            if (currentDateFilter) params.set('date_filter', currentDateFilter);
+            if (currentStartDate) params.set('start_date', currentStartDate);
+            if (currentEndDate) params.set('end_date', currentEndDate);
+            if (currentTester && currentTester !== 'all') params.set('tester_id', currentTester);
+        }
 
         // -- Server config ----------------------------------------------------------
         function applyServer() {
@@ -1583,7 +1693,9 @@
         // -- Stats ------------------------------------------------------------------
         async function loadStats() {
             try {
-                const r = await fetch(`${BASE_URL}/stats`);
+                const params = new URLSearchParams();
+                appendFilterParams(params);
+                const r = await fetch(`${BASE_URL}/stats?${params}`);
                 if (r.status === 401) {
                     window.location.href = '/login';
                     return;
@@ -1615,6 +1727,7 @@
             const perPage = parseInt(document.getElementById('perPageSelect').value);
             const params = new URLSearchParams({ page: currentPage, per_page: perPage });
             if (search) params.set('search', search);
+            appendFilterParams(params);
 
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = `<tr><td colspan="11">
@@ -1910,7 +2023,12 @@
         }
 
         function exportToExcel() {
-            window.location.href = `${BASE_URL}/download_datasheet`;
+            const params = new URLSearchParams();
+            const search = document.getElementById('searchInput').value.trim();
+            if (search) params.set('search', search);
+            appendFilterParams(params);
+            
+            window.location.href = `${BASE_URL}/download_datasheet?${params.toString()}`;
         }
 
 

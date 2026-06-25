@@ -198,6 +198,59 @@ def serve_dashboard():
     dashboard_path = os.path.join(os.path.dirname(__file__), "dashboard.html")
     return send_file(dashboard_path, mimetype="text/html")
 
+def _build_filter_clause(args: dict) -> tuple[str, dict]:
+    """Helper to build WHERE clause from request args for dashboard filtering."""
+    where_clauses = []
+    params = {}
+    
+    search = args.get("search", "").strip()
+    if search:
+        where_clauses.append("(sensor_sn LIKE :q OR work_order LIKE :q OR tester_id LIKE :q)")
+        params["q"] = f"%{search}%"
+        
+    date_filter = args.get("date_filter")
+    if date_filter == "today":
+        where_clauses.append("DATE(received_at) = CURRENT_DATE")
+    elif date_filter == "7days":
+        where_clauses.append("received_at >= NOW() - INTERVAL 7 DAY")
+    elif date_filter == "30days":
+        where_clauses.append("received_at >= NOW() - INTERVAL 30 DAY")
+    elif date_filter == "month":
+        where_clauses.append("MONTH(received_at) = MONTH(CURRENT_DATE) AND YEAR(received_at) = YEAR(CURRENT_DATE)")
+    elif date_filter == "custom":
+        start_date = args.get("start_date")
+        end_date = args.get("end_date")
+        if start_date:
+            where_clauses.append("DATE(received_at) >= :start_date")
+            params["start_date"] = start_date
+        if end_date:
+            where_clauses.append("DATE(received_at) <= :end_date")
+            params["end_date"] = end_date
+            
+    tester_id = args.get("tester_id")
+    if tester_id and tester_id.lower() != "all":
+        where_clauses.append("tester_id = :tester_id")
+        params["tester_id"] = tester_id
+        
+    where_str = " WHERE " + " AND ".join(where_clauses) if where_clauses else ""
+    return where_str, params
+
+@api_bp.route("/testers", methods=["GET"])
+@login_required
+def get_testers() -> tuple[Response, int]:
+    from database import get_engine
+    from sqlalchemy import text as sa_text
+    sql = sa_text("SELECT DISTINCT tester_id FROM sensor_test_results WHERE tester_id IS NOT NULL AND tester_id != '' ORDER BY tester_id")
+    try:
+        engine = get_engine()
+        with engine.connect() as conn:
+            rows = conn.execute(sql).fetchall()
+        testers = [r[0] for r in rows]
+        return jsonify({"status": "ok", "testers": testers}), 200
+    except Exception as exc:
+        logger.exception("GET /testers failed: %s", exc)
+        return jsonify({"status": "error", "message": "Failed to fetch testers."}), 500
+
 # ---------------------------------------------------------------------------
 # POST / — Ingest a sensor test result
 # ---------------------------------------------------------------------------
@@ -395,10 +448,9 @@ def get_data() -> tuple[Response, int]:
         return jsonify({"status": "error", "message": "Invalid pagination parameters."}), 400
 
     offset = (page - 1) * per_page
-    where  = "WHERE (sensor_sn LIKE :q OR work_order LIKE :q OR tester_id LIKE :q)" if search else ""
-    params: dict = {"limit": per_page, "offset": offset}
-    if search:
-        params["q"] = f"%{search}%"
+    where_str, params = _build_filter_clause(request.args)
+    params["limit"] = per_page
+    params["offset"] = offset
 
     sql_rows = sa_text(f"""
         SELECT id, sensor_sn, model, sensor_mac,
@@ -407,11 +459,11 @@ def get_data() -> tuple[Response, int]:
                timestamp, received_at, client_ip,
                image_name, image_format
         FROM sensor_test_results
-        {where}
+        {where_str}
         ORDER BY received_at DESC
         LIMIT :limit OFFSET :offset
     """)
-    sql_count = sa_text(f"SELECT COUNT(*) FROM sensor_test_results {where}")
+    sql_count = sa_text(f"SELECT COUNT(*) FROM sensor_test_results {where_str}")
 
     try:
         engine = get_engine()
@@ -470,7 +522,9 @@ def get_stats() -> tuple[Response, int]:
     from database import get_engine
     from sqlalchemy import text as sa_text
 
-    sql = sa_text("""
+    where_str, params = _build_filter_clause(request.args)
+
+    sql = sa_text(f"""
         SELECT
             COUNT(*)                                    AS total_records,
             COUNT(DISTINCT sensor_sn)                   AS unique_sensors,
@@ -479,11 +533,12 @@ def get_stats() -> tuple[Response, int]:
             ROUND(AVG(nfiq_score), 1)          AS avg_nfiq,
             MAX(received_at)                            AS last_received
         FROM sensor_test_results
+        {where_str}
     """)
     try:
         engine = get_engine()
         with engine.connect() as conn:
-            row = conn.execute(sql).mappings().one()
+            row = conn.execute(sql, params).mappings().one()
         return jsonify({
             "status":             "ok",
             "total_records":      row["total_records"],
@@ -521,6 +576,84 @@ def health_check() -> tuple[Response, int]:
 @api_bp.route("/download_datasheet", methods=["GET"])
 @login_required
 def download_datasheet():
-    if not os.path.exists(EXCEL_PATH):
-        return jsonify({"status": "error", "message": "Datasheet does not exist yet."}), 404
-    return send_file(EXCEL_PATH, as_attachment=True, download_name="Datasheet.xlsx")
+    from database import get_engine
+    from sqlalchemy import text as sa_text
+    import openpyxl
+    import io
+    from openpyxl.drawing.image import Image as OpenpyxlImage
+    from PIL import Image as PILImage
+    
+    where_str, params = _build_filter_clause(request.args)
+    sql_rows = sa_text(f"""
+        SELECT sensor_sn, model, sensor_mac,
+               quality_score_afiq, nfiq_score, minutiae_count,
+               work_order, tester_id, received_at,
+               image_format, fingerprint_image
+        FROM sensor_test_results
+        {where_str}
+        ORDER BY received_at ASC
+    """)
+    
+    try:
+        engine = get_engine()
+        with engine.connect() as conn:
+            rows = conn.execute(sql_rows, params).mappings().all()
+            
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "Test Results"
+        headers = ["Date/Time", "Sensor SN", "MAC Address", "Model", "AFIQ Score", "NFIQ Score", "Minutiae", "Work Order", "Tester", "Image Format", "Fingerprint Photo"]
+        ws.append(headers)
+        
+        for record in rows:
+            row = [
+                record["received_at"].strftime("%Y-%m-%d %H:%M:%S") if record["received_at"] else "",
+                record["sensor_sn"] or "",
+                record["sensor_mac"] or "",
+                record["model"] or "",
+                record["quality_score_afiq"] if record["quality_score_afiq"] is not None else "",
+                record["nfiq_score"] if record["nfiq_score"] is not None else "",
+                record["minutiae_count"] if record["minutiae_count"] is not None else "",
+                record["work_order"] or "",
+                record["tester_id"] or "",
+                record["image_format"] or ""
+            ]
+            ws.append(row)
+            
+            if record["fingerprint_image"]:
+                try:
+                    row_idx = ws.max_row
+                    img_data = io.BytesIO(record["fingerprint_image"])
+                    pil_img = PILImage.open(img_data)
+                    orig_w, orig_h = pil_img.size
+                    ratio = 100.0 / orig_h
+                    new_w = int(orig_w * ratio)
+                    
+                    img_data.seek(0)
+                    xl_img = OpenpyxlImage(img_data)
+                    xl_img.width = new_w
+                    xl_img.height = 100
+                    
+                    col_letter = "K"
+                    cell_ref = f"{col_letter}{row_idx}"
+                    ws.add_image(xl_img, cell_ref)
+                    
+                    ws.row_dimensions[row_idx].height = 80
+                    current_w = ws.column_dimensions[col_letter].width
+                    if current_w is None or current_w < (new_w / 7.0):
+                        ws.column_dimensions[col_letter].width = (new_w / 7.0) + 2
+                except Exception as e:
+                    logger.error("Error adding image to excel: %s", e)
+                    
+        output = io.BytesIO()
+        wb.save(output)
+        output.seek(0)
+        return send_file(
+            output, 
+            as_attachment=True, 
+            download_name="Filtered_Datasheet.xlsx",
+            mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+    except Exception as exc:
+        logger.exception("GET /download_datasheet failed: %s", exc)
+        return jsonify({"status": "error", "message": "Failed to generate Excel file."}), 500
