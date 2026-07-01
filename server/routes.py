@@ -41,14 +41,14 @@ def append_to_excel(record: SensorTestResult):
             wb = openpyxl.Workbook()
             ws = wb.active
             ws.title = "Test Results"
-            headers = ["Date/Time", "Sensor SN", "MAC Address", "Model", "AFIQ Score", "NFIQ Score", "Minutiae", "Work Order", "Tester", "Image Format", "Fingerprint Photo"]
+            headers = ["Date/Time", "Sensor SN", "MAC Address", "Model", "Image Quality", "NFIQ2 Score", "Work Order", "Tester", "Image Format", "Fingerprint Photo"]
             ws.append(headers)
         else:
             wb = openpyxl.load_workbook(EXCEL_PATH)
             ws = wb.active
             # Ensure headers exist
             if ws.max_row <= 1 and ws.cell(row=1, column=1).value is None:
-                headers = ["Date/Time", "Sensor SN", "MAC Address", "Model", "AFIQ Score", "NFIQ Score", "Minutiae", "Work Order", "Tester", "Image Format", "Fingerprint Photo"]
+                headers = ["Date/Time", "Sensor SN", "MAC Address", "Model", "Image Quality", "NFIQ2 Score", "Work Order", "Tester", "Image Format", "Fingerprint Photo"]
                 ws.append(headers)
         
         row = [
@@ -56,9 +56,8 @@ def append_to_excel(record: SensorTestResult):
             record.sensor_sn or "",
             record.sensor_mac or "",
             record.model or "",
-            record.quality_score_afiq if record.quality_score_afiq is not None else "",
-            record.nfiq_score if record.nfiq_score is not None else "",
-            record.minutiae_count if record.minutiae_count is not None else "",
+            record.image_quality if record.image_quality is not None else "",
+            record.nfiq2_score if record.nfiq2_score is not None else "",
             record.work_order or "",
             record.tester_id or "",
             record.image_format or ""
@@ -81,7 +80,7 @@ def append_to_excel(record: SensorTestResult):
                 xl_img.width = new_w
                 xl_img.height = 100
                 
-                col_letter = "K" # 11th column is Photo
+                col_letter = "J" # 10th column is Photo
                 cell_ref = f"{col_letter}{row_idx}"
                 ws.add_image(xl_img, cell_ref)
                 
@@ -258,6 +257,16 @@ def get_testers() -> tuple[Response, int]:
 
 @api_bp.route("/", methods=["POST"])
 def ingest_test_result() -> tuple[Response, int]:
+    def normalize_payload(payload: dict) -> dict:
+        if not isinstance(payload, dict):
+            return payload
+        # Map legacy fields to new ones
+        if "nfiq_score" in payload:
+            payload["nfiq2_score"] = payload.pop("nfiq_score")
+        if "quality_score_afiq" in payload:
+            payload["image_quality"] = payload.pop("quality_score_afiq")
+        return payload
+
     client_ip: str = request.remote_addr or "unknown"
     logger.info("POST / received from %s", client_ip)
 
@@ -268,6 +277,11 @@ def ingest_test_result() -> tuple[Response, int]:
             "status": "error",
             "message": "Request body must be valid JSON with Content-Type: application/json.",
         }), 400
+
+    if isinstance(payload, dict):
+        logger.info("Incoming payload keys before validation: %s", list(payload.keys()))
+
+    payload = normalize_payload(payload)
 
     try:
         validated = SensorTestResultSchema(**payload)
@@ -315,9 +329,8 @@ def ingest_test_result() -> tuple[Response, int]:
             sensor_sn=validated.sensor_sn,
             model=validated.model,
             sensor_mac=validated.sensor_mac,
-            quality_score_afiq=validated.quality_score_afiq,
-            nfiq_score=validated.nfiq_score,
-            minutiae_count=validated.minutiae_count,
+            image_quality=validated.image_quality,
+            nfiq2_score=validated.nfiq2_score,
             verification_score=validated.verification_score,
             part_number=validated.part_number,
             work_order=validated.work_order,
@@ -328,6 +341,8 @@ def ingest_test_result() -> tuple[Response, int]:
             image_name=image_name,
             image_format=image_format,
             fingerprint_image=fingerprint_image_bytes,
+            minutiae_count=validated.minutiae_count,
+            lfd_status=validated.lfd_status,
         )
         # Capture values inside the session block to avoid DetachedInstanceError
         with get_db() as db:
@@ -455,7 +470,7 @@ def get_data() -> tuple[Response, int]:
 
     sql_rows = sa_text(f"""
         SELECT id, sensor_sn, model, sensor_mac,
-               quality_score_afiq, nfiq_score, minutiae_count, verification_score,
+               image_quality, nfiq2_score, verification_score,
                part_number, work_order, tester_id,
                timestamp, received_at, client_ip,
                image_name, image_format
@@ -489,9 +504,8 @@ def get_data() -> tuple[Response, int]:
                     "sensor_sn":          r["sensor_sn"],
                     "model":              r["model"],
                     "sensor_mac":         r["sensor_mac"],
-                    "quality_score_afiq": r["quality_score_afiq"],
-                    "nfiq_score":         r["nfiq_score"],
-                    "minutiae_count":     r["minutiae_count"],
+                    "image_quality":      r["image_quality"],
+                    "nfiq2_score":        r["nfiq2_score"],
                     "verification_score": r["verification_score"],
                     "part_number":        r["part_number"],
                     "work_order":         r["work_order"],
@@ -530,8 +544,8 @@ def get_stats() -> tuple[Response, int]:
             COUNT(*)                                    AS total_records,
             COUNT(DISTINCT sensor_sn)                   AS unique_sensors,
             COUNT(DISTINCT work_order)                  AS unique_work_orders,
-            ROUND(AVG(quality_score_afiq), 1)  AS avg_quality,
-            ROUND(AVG(nfiq_score), 1)          AS avg_nfiq,
+            ROUND(AVG(image_quality), 1)  AS avg_quality,
+            ROUND(AVG(nfiq2_score), 1)          AS avg_nfiq,
             MAX(received_at)                            AS last_received
         FROM sensor_test_results
         {where_str}
@@ -587,7 +601,7 @@ def download_datasheet():
     where_str, params = _build_filter_clause(request.args)
     sql_rows = sa_text(f"""
         SELECT sensor_sn, model, sensor_mac,
-               quality_score_afiq, nfiq_score, minutiae_count,
+               image_quality, nfiq2_score,
                work_order, tester_id, received_at,
                image_format, fingerprint_image
         FROM sensor_test_results
@@ -603,7 +617,7 @@ def download_datasheet():
         wb = openpyxl.Workbook()
         ws = wb.active
         ws.title = "Test Results"
-        headers = ["Date/Time", "Sensor SN", "MAC Address", "Model", "AFIQ Score", "NFIQ Score", "Minutiae", "Work Order", "Tester", "Image Format", "Fingerprint Photo"]
+        headers = ["Date/Time", "Sensor SN", "MAC Address", "Model", "Image Quality", "NFIQ2 Score", "Work Order", "Tester", "Image Format", "Fingerprint Photo"]
         ws.append(headers)
         
         for record in rows:
@@ -612,9 +626,8 @@ def download_datasheet():
                 record["sensor_sn"] or "",
                 record["sensor_mac"] or "",
                 record["model"] or "",
-                record["quality_score_afiq"] if record["quality_score_afiq"] is not None else "",
-                record["nfiq_score"] if record["nfiq_score"] is not None else "",
-                record["minutiae_count"] if record["minutiae_count"] is not None else "",
+                record["image_quality"] if record["image_quality"] is not None else "",
+                record["nfiq2_score"] if record["nfiq2_score"] is not None else "",
                 record["work_order"] or "",
                 record["tester_id"] or "",
                 record["image_format"] or ""
@@ -635,7 +648,7 @@ def download_datasheet():
                     xl_img.width = new_w
                     xl_img.height = 100
                     
-                    col_letter = "K"
+                    col_letter = "J"
                     cell_ref = f"{col_letter}{row_idx}"
                     ws.add_image(xl_img, cell_ref)
                     

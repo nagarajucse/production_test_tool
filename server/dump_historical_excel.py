@@ -15,7 +15,7 @@ def dump_data():
     wb = openpyxl.Workbook()
     ws = wb.active
     ws.title = "Test Results"
-    headers = ["Date/Time", "Sensor SN", "MAC Address", "Model", "AFIQ Score", "NFIQ Score", "Minutiae", "Work Order", "Tester", "Image Format", "Fingerprint Photo"]
+    headers = ["Date/Time", "Sensor SN", "MAC Address", "Model", "Image Quality", "NFIQ2 Score", "Work Order", "Tester", "Image Format", "Fingerprint Photo"]
     ws.append(headers)
     
     engine = get_engine()
@@ -27,9 +27,8 @@ def dump_data():
                 record.sensor_sn or "",
                 record.sensor_mac or "",
                 record.model or "",
-                record.quality_score_afiq if record.quality_score_afiq is not None else "",
-                record.nfiq_score if record.nfiq_score is not None else "",
-                record.minutiae_count if record.minutiae_count is not None else "",
+                record.image_quality if record.image_quality is not None else "",
+                record.nfiq2_score if record.nfiq2_score is not None else "",
                 record.work_order or "",
                 record.tester_id or "",
                 record.image_format or ""
@@ -51,7 +50,7 @@ def dump_data():
                     xl_img.width = new_w
                     xl_img.height = 100
                     
-                    col_letter = "K"
+                    col_letter = "J"
                     cell_ref = f"{col_letter}{row_idx}"
                     ws.add_image(xl_img, cell_ref)
                     

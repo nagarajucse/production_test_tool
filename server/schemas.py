@@ -8,7 +8,7 @@ which routes.py catches and returns as a structured HTTP 400 response.
 
 from datetime import datetime
 from typing import Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 
 class SensorTestResultSchema(BaseModel):
@@ -22,16 +22,18 @@ class SensorTestResultSchema(BaseModel):
     # Sensor identity
     sensor_sn: str = Field(..., min_length=1, max_length=100, description="Sensor serial number")
     model: str = Field(..., min_length=1, max_length=50, description="Sensor model (e.g. A400)")
-    sensor_mac: str = Field(..., min_length=1, max_length=50, description="Sensor MAC address")
+    sensor_mac: str = Field(default="", max_length=50)
+    #sensor_mac: str = Field(..., min_length=1, max_length=50, description="Sensor MAC address")
 
     # Quality scores
-    quality_score_afiq: int = Field(..., ge=0, description="AFIQ quality score")
-    nfiq_score: int = Field(..., ge=0, description="NFIQ2 quality score")
-    minutiae_count: int = Field(..., ge=0, description="Detected minutiae count")
+    image_quality: int = Field(..., alias="quality_score_afiq", ge=0, description="Image quality score")
+    nfiq2_score: int = Field(..., alias="nfiq_score", ge=0, description="NFIQ2 quality score")
     verification_score: int = Field(..., ge=0, description="Biometric verification score")
+    minutiae_count: Optional[int] = 0
+    lfd_status: Optional[str] = "Unknown"
 
     # Work order & traceability
-    part_number: str = Field(..., min_length=1, max_length=100, description="Product part number")
+    part_number: str = Field(default="", max_length=100)
     work_order: str = Field(..., min_length=1, max_length=100, description="Manufacturing work order")
     tester_id: str = Field(..., min_length=1, max_length=50, description="Tester or station ID")
 
@@ -46,4 +48,4 @@ class SensorTestResultSchema(BaseModel):
     image_data: Optional[str] = Field(None, description="Base64 encoded fingerprint image alternative key")
     base64_image: Optional[str] = Field(None, description="Base64 encoded fingerprint image alternative key")
 
-    model_config = {"str_strip_whitespace": True}
+    model_config = ConfigDict(str_strip_whitespace=True, populate_by_name=True)

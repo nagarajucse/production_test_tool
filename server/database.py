@@ -102,8 +102,22 @@ def create_tables() -> None:
     classes with Base.metadata before create_all() is called.
     """
     from models import Base  # noqa: F401 — triggers ORM model registration
+    from sqlalchemy import text, inspect
 
     logger.info("Running schema provisioning (CREATE TABLE IF NOT EXISTS)...")
+    try:
+        insp = inspect(_engine)
+        if insp.has_table('sensor_test_results'):
+            columns = [col['name'] for col in insp.get_columns('sensor_test_results')]
+            if 'minutiae_count' not in columns:
+                logger.info("Applying schema migration to add minutiae_count and lfd_status...")
+                with _engine.begin() as conn:
+                    conn.execute(text("ALTER TABLE sensor_test_results ADD COLUMN minutiae_count INTEGER DEFAULT 0"))
+                    conn.execute(text("ALTER TABLE sensor_test_results ADD COLUMN lfd_status VARCHAR(50) DEFAULT 'Unknown'"))
+                logger.info("Schema migration successful.")
+    except Exception as e:
+        logger.warning("Automatic schema migration skipped or failed: %s", e)
+
     try:
         Base.metadata.create_all(bind=_engine)
         logger.info("Schema provisioning complete — all tables are ready.")

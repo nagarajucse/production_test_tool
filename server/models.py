@@ -69,25 +69,32 @@ class SensorTestResult(Base):
     )
 
     # --- Quality Scores ---
-    quality_score_afiq: Mapped[int] = mapped_column(
+    image_quality: Mapped[int] = mapped_column(
         Integer,
         nullable=False,
-        comment="AFIQ quality score computed by the testing client",
+        comment="Image quality score computed by the testing client",
     )
-    nfiq_score: Mapped[int] = mapped_column(
+    nfiq2_score: Mapped[int] = mapped_column(
         Integer,
         nullable=False,
         comment="NFIQ2 fingerprint quality score",
-    )
-    minutiae_count: Mapped[int] = mapped_column(
-        Integer,
-        nullable=False,
-        comment="Number of minutiae detected in the captured fingerprint",
     )
     verification_score: Mapped[int] = mapped_column(
         Integer,
         nullable=False,
         comment="Biometric verification match score",
+    )
+    minutiae_count: Mapped[int] = mapped_column(
+        Integer,
+        nullable=True,
+        default=0,
+        comment="Number of extracted minutiae points",
+    )
+    lfd_status: Mapped[str] = mapped_column(
+        String(50),
+        nullable=True,
+        default="Unknown",
+        comment="Live Finger Detection status",
     )
 
     # --- Work Order & Traceability ---

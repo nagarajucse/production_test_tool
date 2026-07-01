@@ -161,9 +161,8 @@ Content-Type: application/json
 {
     "sensor_sn": "A400202401010111111",
     "model": "A400",
-    "quality_score_afiq": 81,
-    "nfiq_score": 81,
-    "minutiae_count": 0,
+    "image_quality": 81,
+    "nfiq2_score": 81,
     "verification_score": 333,
     "part_number": "1.17-A400-0001",
     "work_order": "MO-1-2025-0211",
@@ -179,9 +178,8 @@ Content-Type: application/json
 |-------|------|----------|------------|
 | `sensor_sn` | string | ✅ | non-empty, max 100 chars |
 | `model` | string | ✅ | non-empty, max 50 chars |
-| `quality_score_afiq` | integer | ✅ | 0–100 |
-| `nfiq_score` | integer | ✅ | 0–100 |
-| `minutiae_count` | integer | ✅ | >= 0 |
+| `image_quality` | integer | ✅ | 0–100 |
+| `nfiq2_score` | integer | ✅ | 0–100 |
 | `verification_score` | integer | ✅ | >= 0 |
 | `part_number` | string | ✅ | non-empty, max 100 chars |
 | `work_order` | string | ✅ | non-empty, max 100 chars |
@@ -241,9 +239,8 @@ import requests
 payload = {
     "sensor_sn": "A400202401010111111",
     "model": "A400",
-    "quality_score_afiq": 81,
-    "nfiq_score": 81,
-    "minutiae_count": 0,
+    "image_quality": 81,
+    "nfiq2_score": 81,
     "verification_score": 333,
     "part_number": "1.17-A400-0001",
     "work_order": "MO-1-2025-0211",
@@ -264,9 +261,8 @@ curl -X POST http://localhost:5000/ \
   -d '{
     "sensor_sn": "A400202401010111111",
     "model": "A400",
-    "quality_score_afiq": 81,
-    "nfiq_score": 81,
-    "minutiae_count": 0,
+    "image_quality": 81,
+    "nfiq2_score": 81,
     "verification_score": 333,
     "part_number": "1.17-A400-0001",
     "work_order": "MO-1-2025-0211",
@@ -300,7 +296,7 @@ Connect with `psql` or pgAdmin:
 
 ```sql
 -- View all stored test results (latest first)
-SELECT id, sensor_sn, model, quality_score_afiq, nfiq_score,
+SELECT id, sensor_sn, model, image_quality, nfiq2_score,
        work_order, tester_id, received_at
 FROM sensor_test_results
 ORDER BY received_at DESC
@@ -311,7 +307,7 @@ SELECT * FROM sensor_test_results
 WHERE sensor_sn = 'A400202401010111111';
 
 -- Filter by work order
-SELECT sensor_sn, model, nfiq_score, verification_score, received_at
+SELECT sensor_sn, model, nfiq2_score, verification_score, received_at
 FROM sensor_test_results
 WHERE work_order = 'MO-1-2025-0211'
 ORDER BY received_at;

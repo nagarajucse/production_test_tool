@@ -1295,7 +1295,7 @@
             </div>
             <div class="stat-card">
                 <div class="stat-header">
-                    <div class="stat-label">Avg Quality (AFIQ)</div>
+                    <div class="stat-label">Avg Image Quality</div>
                     <div class="stat-icon" style="color: var(--success)">
                         <svg viewBox="0 0 24 24">
                             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
@@ -1307,7 +1307,7 @@
             </div>
             <div class="stat-card">
                 <div class="stat-header">
-                    <div class="stat-label">Avg NFIQ Score</div>
+                    <div class="stat-label">Avg NFIQ2 Score</div>
                     <div class="stat-icon" style="color: var(--warning)">
                         <svg viewBox="0 0 24 24">
                             <polygon
@@ -1377,9 +1377,8 @@
                             <th>Sensor SN</th>
                             <th>Model</th>
                             <th>MAC</th>
-                            <th>AFIQ</th>
-                            <th>NFIQ</th>
-                            <th>Minutiae</th>
+                            <th>Image Quality</th>
+                            <th>NFIQ2 Score</th>
                             <th>Verify Score</th>
                             <th>Work Order</th>
                             <th>Tester</th>
@@ -1389,7 +1388,7 @@
                     </thead>
                     <tbody id="tableBody">
                         <tr>
-                            <td colspan="11">
+                            <td colspan="10">
                                 <div class="empty-state">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round">
@@ -1730,7 +1729,7 @@
             appendFilterParams(params);
 
             const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = `<tr><td colspan="11">
+            tbody.innerHTML = `<tr><td colspan="10">
                 <div class="empty-state"><div class="spinner"></div></div>
             </td></tr>`;
 
@@ -1749,7 +1748,7 @@
                 document.getElementById('showingCount').textContent = d.rows.length.toLocaleString();
 
                 if (d.rows.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="11"><div class="empty-state">
+                    tbody.innerHTML = `<tr><td colspan="10"><div class="empty-state">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                         <div class="title">No records found</div></div></td></tr>`;
                     document.getElementById('pagination').style.display = 'none';
@@ -1763,9 +1762,8 @@
                         <td class="mono">${esc(row.sensor_sn)}</td>
                         <td><span class="badge badge-blue">${esc(row.model)}</span></td>
                         <td class="mono" style="color:var(--muted)">${esc(row.sensor_mac)}</td>
-                        <td>${scoreBar(row.quality_score_afiq, 100, true)}</td>
-                        <td>${scoreBar(row.nfiq_score, 100, false)}</td>
-                        <td style="text-align:right" class="mono">${row.minutiae_count}</td>
+                        <td>${scoreBar(row.image_quality, 100, true)}</td>
+                        <td>${scoreBar(row.nfiq2_score, 100, false)}</td>
                         <td>${scoreBar(row.verification_score, 500, true)}</td>
                         <td class="mono">${esc(row.work_order)}</td>
                         <td><span class="badge badge-green">${esc(row.tester_id)}</span></td>
@@ -1800,7 +1798,7 @@
                 document.getElementById('pagination').style.display = totalPages > 1 ? 'flex' : 'none';
 
             } catch (e) {
-                tbody.innerHTML = `<tr><td colspan="11"><div class="empty-state">
+                tbody.innerHTML = `<tr><td colspan="10"><div class="empty-state">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
                     <div class="title">Error Loading Data</div>
                     <div>${esc(e.message || 'Failed to load data')}</div></div></td></tr>`;
@@ -1938,10 +1936,9 @@
                     ['MAC', row.sensor_mac],
                     ['Work Order', row.work_order],
                     ['Tester', row.tester_id],
-                    ['AFIQ', row.quality_score_afiq],
-                    ['NFIQ', row.nfiq_score],
+                    ['Image Quality', row.image_quality],
+                    ['NFIQ2 Score', row.nfiq2_score],
                     ['Verify', row.verification_score],
-                    ['Minutiae', row.minutiae_count],
                     ['Format', row.image_format || 'N/A'],
                 ];
 
@@ -2069,8 +2066,8 @@
                 ['Model', row.model, false],
                 ['Work Order', row.work_order, false],
                 ['Tester', row.tester_id, false],
-                ['AFIQ', row.quality_score_afiq, false],
-                ['NFIQ', row.nfiq_score, false],
+                ['Image Quality', row.image_quality, false],
+                ['NFIQ2 Score', row.nfiq2_score, false],
                 ['Verify Score', row.verification_score, false],
                 ['Client IP', row.client_ip, false],
                 ['Received Time', fmtDate(row.received_at), true],
