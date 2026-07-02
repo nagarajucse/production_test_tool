@@ -2,7 +2,7 @@ import requests
 import sys
 
 def create_admin(username, password):
-    url = "http://localhost:5001/register" # Adjust port to 5001 if you changed it as suggested
+    url = "http://localhost:5000/register" # Adjust port to 5001 if you changed it as suggested
     payload = {
         "username": username,
         "password": password
